@@ -1,0 +1,6 @@
+{
+  "name": "JAGREETI - Socio-Humanitarian Youth Foundation",
+  "description": "Bilingual socio-humanitarian platform featuring education, relief distribution, environmental action, community healthcare, and youth leadership.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
