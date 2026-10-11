@@ -17,7 +17,7 @@ import { AdminVolunteersTab } from './admin/tabs/AdminVolunteersTab';
 import { AdminDonationsTab } from './admin/tabs/AdminDonationsTab';
 import { AdminContactTab } from './admin/tabs/AdminContactTab';
 import { AdminFirebaseDocsTab } from './admin/tabs/AdminFirebaseDocsTab';
-import { auth, onAuthStateChanged, signOut } from '../services/firebaseService';
+import { auth, firebaseConfigured, onAuthStateChanged, signOut } from '../services/firebaseService';
 
 const ADMIN_AUTH_STORAGE_KEY = 'jagreeti_admin_authenticated_v1';
 
@@ -59,6 +59,22 @@ export const AdminPanelPage: React.FC = () => {
   };
 
   if (!isAuthenticated) {
+    if (!firebaseConfigured) {
+      return (
+        <div className="min-h-[70vh] flex items-center justify-center px-4 py-12 bg-slate-50">
+          <div className="max-w-lg rounded-2xl border border-amber-200 bg-amber-50 p-6 text-center shadow-sm">
+            <h2 className="text-lg font-bold text-amber-950">
+              {language === 'bn' ? 'Firebase কনফিগারেশন প্রয়োজন' : 'Firebase configuration required'}
+            </h2>
+            <p className="mt-2 text-sm text-amber-900">
+              {language === 'bn'
+                ? '.env ফাইলে VITE_FIREBASE_* মান যোগ করে আবার চালু করুন।'
+                : 'Add the VITE_FIREBASE_* values from .env.example to a local .env file, then restart Vite.'}
+            </p>
+          </div>
+        </div>
+      );
+    }
     return <AdminLogin onLoginSuccess={handleLoginSuccess} />;
   }
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Info, Save, Eye, BookOpen, Compass, ShieldCheck } from 'lucide-react';
 import { useApp } from '../../../context/AppContext';
 
@@ -15,6 +15,10 @@ export const AdminAboutTab: React.FC = () => {
     visionBn: siteSettings?.visionBn || '',
     visionEn: siteSettings?.visionEn || '',
   });
+
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, ...siteSettings }));
+  }, [siteSettings]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;

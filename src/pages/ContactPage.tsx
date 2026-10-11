@@ -14,7 +14,7 @@ import {
 import { useApp } from '../context/AppContext';
 
 export const ContactPage: React.FC = () => {
-  const { language, t, currentPalette, showToast } = useApp();
+  const { language, t, currentPalette, siteSettings, showToast } = useApp();
 
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -69,7 +69,9 @@ export const ContactPage: React.FC = () => {
                   <strong className="block text-slate-900 dark:text-white font-semibold">
                     {t.contact.headOffice}
                   </strong>
-                  <span>{t.contact.address}</span>
+                  <span>
+                    {language === 'bn' ? siteSettings?.officeAddressBn || '' : siteSettings?.officeAddressEn || ''}
+                  </span>
                 </div>
               </div>
 
@@ -81,8 +83,11 @@ export const ContactPage: React.FC = () => {
                   <strong className="block text-slate-900 dark:text-white font-semibold">
                     {t.contact.hotline}
                   </strong>
-                  <a href="tel:01744769331" className="hover:underline">
-                    {t.contact.phoneNumbers}
+                  <a
+                    href={siteSettings?.contactPhone ? `tel:${siteSettings.contactPhone}` : undefined}
+                    className="hover:underline"
+                  >
+                    {siteSettings?.contactPhone || ''}
                   </a>
                   <div className="text-[11px] text-slate-400">
                     {language === 'bn' ? '২৪ ঘণ্টা জরুরি রক্ত হেল্পলাইন' : '24/7 Emergency Blood Assistance'}
@@ -98,8 +103,11 @@ export const ContactPage: React.FC = () => {
                   <strong className="block text-slate-900 dark:text-white font-semibold">
                     {t.common.email}
                   </strong>
-                  <a href="mailto:contact@jagreeti.org" className="hover:underline">
-                    {t.contact.emailAddress}
+                  <a
+                    href={siteSettings?.contactEmail ? `mailto:${siteSettings.contactEmail}` : undefined}
+                    className="hover:underline"
+                  >
+                    {siteSettings?.contactEmail || ''}
                   </a>
                   <div className="text-[11px] text-slate-400">Official inquiries & partnerships</div>
                 </div>
@@ -127,7 +135,7 @@ export const ContactPage: React.FC = () => {
               </span>
               <div className="flex items-center gap-2">
                 <a
-                  href="https://facebook.com"
+                  href={siteSettings?.facebookUrl || undefined}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-emerald-100 text-slate-700 dark:text-slate-300 hover:text-emerald-700 transition"

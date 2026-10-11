@@ -170,6 +170,10 @@ function sortByPriority<T extends { priority?: number }>(list: T[]): T[] {
   return [...list].sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));
 }
 
+function serializeCollection<T extends { id: string }>(items: T[]): string {
+  return JSON.stringify([...items].sort((a, b) => a.id.localeCompare(b.id)));
+}
+
 function swapPriorityInList<T extends { id: string; priority?: number }>(
   list: T[],
   id: string,
@@ -197,19 +201,27 @@ function useFirestoreCollection<T extends { id: string }>(
 ): [T[], React.Dispatch<React.SetStateAction<T[]>>] {
   const [items, setItems] = useState<T[]>([]);
   const hydrated = useRef(false);
+  const lastSynced = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!firebaseConfigured) return;
+    if (!firebaseConfigured) return undefined;
     return subscribeToCollection<T>(collectionName, (nextItems) => {
       hydrated.current = true;
+      lastSynced.current = serializeCollection(nextItems);
       setItems(nextItems);
     });
   }, [collectionName]);
 
   useEffect(() => {
     if (!firebaseConfigured || !hydrated.current) return;
+    const serialized = serializeCollection(items);
+    if (serialized === lastSynced.current) return;
+    lastSynced.current = serialized;
     void replaceCollection(collectionName, items).catch((error) =>
-      console.error(`Unable to save ${collectionName}:`, error)
+      (() => {
+        lastSynced.current = null;
+        console.error(`Unable to save ${collectionName}:`, error);
+      })()
     );
   }, [collectionName, items]);
 
@@ -228,26 +240,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [activePage, setActivePageState] = useState<string>(() => {
-    const hashPage = window.location.hash.replace(/^#/, '').split('?')[0];
-    return hashPage || 'home';
+    return window.location.pathname.replace(/^\/+|\/+$/g, '') || 'home';
   });
 
   const setActivePage = (page: string) => {
     setActivePageState(page);
-    const query = page === 'notices' ? window.location.hash.split('?')[1] : '';
-    window.history.pushState({}, '', `#${page}${query ? `?${query}` : ''}`);
+    const query = page === 'notices' ? window.location.search : '';
+    window.history.pushState({}, '', `/${page}${query}`);
   };
 
   useEffect(() => {
     const syncPageFromUrl = () => {
-      const hashPage = window.location.hash.replace(/^#/, '').split('?')[0];
-      setActivePageState(hashPage || 'home');
+      const pathPage = window.location.pathname.replace(/^\/+|\/+$/g, '');
+      setActivePageState(pathPage || 'home');
     };
     window.addEventListener('popstate', syncPageFromUrl);
-    window.addEventListener('hashchange', syncPageFromUrl);
     return () => {
       window.removeEventListener('popstate', syncPageFromUrl);
-      window.removeEventListener('hashchange', syncPageFromUrl);
     };
   }, []);
 
@@ -268,7 +277,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [rawCommitteeGroups, setCommitteeGroups] = useFirestoreCollection<CommitteeGroup>('committee_groups');
 
   // Committee Members
-  const [rawCommittee, setCommittee] = useFirestoreCollection<CommitteeMember>('committee_members');
+  const [rawCommittee, setCommittee] = useFirestoreCollection<CommitteeMember>(
+    'committee_members'
+  );
 
   // Programs
   const [rawPrograms, setPrograms] = useFirestoreCollection<ProgramItem>('programs');
@@ -283,10 +294,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [rawGalleryAlbums, setGalleryAlbums] = useFirestoreCollection<GalleryAlbum>('gallery_albums');
 
   // Gallery Items (Photos & Videos)
-  const [rawGalleryPhotos, setGalleryPhotos] = useFirestoreCollection<GalleryPhoto>('gallery_items');
+  const [rawGalleryPhotos, setGalleryPhotos] = useFirestoreCollection<GalleryPhoto>(
+    'gallery_items'
+  );
 
   // Volunteers
-  const [volunteers, setVolunteers] = useFirestoreCollection<VolunteerApplication>('volunteers');
+  const [volunteers, setVolunteers] = useFirestoreCollection<VolunteerApplication>(
+    'volunteers'
+  );
 
   // Donations
   const [donations, setDonations] = useFirestoreCollection<DonationRecord>('donations');
@@ -397,11 +412,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return subscribeToCollection<{ id: string } & CustomCategoriesMap>(
       'categories',
       (items) => {
+        categoriesHydrated.current = true;
         const registry = items.find((item) => item.id === 'registry');
         if (registry) {
-          categoriesHydrated.current = true;
           const { id: _id, ...categories } = registry;
           setCustomCategories(categories);
+        } else {
+          setCustomCategories({});
         }
       }
     );
@@ -413,11 +430,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     if (!firebaseConfigured) return;
     return subscribeToCollection<{ id: string } & SiteSettings>('site_settings', (items) => {
+      siteSettingsHydrated.current = true;
       const globalConfig = items.find((item) => item.id === 'global_config');
       if (globalConfig) {
-        siteSettingsHydrated.current = true;
         const { id: _id, ...settings } = globalConfig;
         setSiteSettings(settings);
+      } else {
+        setSiteSettings({} as SiteSettings);
       }
     });
   }, []);

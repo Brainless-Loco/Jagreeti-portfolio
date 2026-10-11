@@ -54,7 +54,7 @@ export const Navbar: React.FC = () => {
             <span className="text-white/20">|</span>
             <span className="text-slate-300">
               {language === 'bn'
-                ? 'জাগ্রীতি — অরাজনৈতিক সমাজকল্যাণমূলক যুব সংগঠন | লালমনিরহাট'
+                ? 'জাগ্রীতি — অরাজনৈতিক সমাজকল্যাণমূলক যুব সংগঠন | হাটহাজারী, চট্টগ্রাম, বাংলাদেশ'
                 : 'JAGREETI — Apolitical Socio-Humanitarian Youth Movement | Bangladesh'}
             </span>
           </div>

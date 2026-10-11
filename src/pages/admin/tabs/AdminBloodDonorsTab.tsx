@@ -59,7 +59,7 @@ export const AdminBloodDonorsTab: React.FC = () => {
       district: 'Lalmonirhat',
       upazila: formData.location.trim() || 'Lalmonirhat Sadar',
       location: formData.location.trim() || 'Lalmonirhat Sadar',
-      locationBn: formData.locationBn.trim() || formData.location.trim() || 'লালমনিরহাট সদর',
+      locationBn: formData.locationBn.trim() || formData.location.trim() || 'হাটহাজারী',
       phone: formData.phone.trim(),
       lastDonationDate: new Date().toISOString().slice(0, 10),
       lastDonated: formData.lastDonated.trim() || 'Ready to donate',
@@ -218,7 +218,7 @@ export const AdminBloodDonorsTab: React.FC = () => {
                 type="text"
                 value={formData.locationBn}
                 onChange={(e) => setFormData({ ...formData, locationBn: e.target.value })}
-                placeholder="কলেজ রোড, লালমনিরহাট"
+                placeholder="হাটহাজারী"
                 className="w-full px-3.5 py-2 rounded-xl border border-slate-300 bg-white text-sm"
               />
             </div>

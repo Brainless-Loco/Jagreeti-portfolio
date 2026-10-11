@@ -62,33 +62,38 @@ export const HomePage: React.FC = () => {
 
   const urgentNotices = (notices || []).filter((n) => n.isUrgent);
   const availableDonorsCount = (donors || []).filter((d) => d.available ?? d.isAvailable).length;
+  const bloodBagsArranged = donors?.length
+    ? donors.reduce((total, donor) => total + (Number(donor.totalDonations) || 0), 0)
+    : null;
+  const formatCount = (value: number | undefined, locale = 'en-US') =>
+    value === undefined || value === null ? '' : `${value.toLocaleString(locale)}+`;
 
   const impactStats = [
     {
       icon: Users,
-      valueEn: `${(siteSettings?.beneficiariesCount || 28500).toLocaleString()}+`,
-      valueBn: `${(siteSettings?.beneficiariesCount || 28500).toLocaleString('bn-BD')}+`,
+      valueEn: formatCount(siteSettings?.beneficiariesCount),
+      valueBn: formatCount(siteSettings?.beneficiariesCount, 'bn-BD'),
       labelEn: 'Lives Impacted Directly',
       labelBn: 'সরাসরি উপকৃত মানুষ',
     },
     {
       icon: Droplets,
-      valueEn: '4,850+',
-      valueBn: '৪,৮৫০+',
+      valueEn: bloodBagsArranged === null ? '' : bloodBagsArranged.toLocaleString(),
+      valueBn: bloodBagsArranged === null ? '' : bloodBagsArranged.toLocaleString('bn-BD'),
       labelEn: 'Bags of Blood Arranged',
       labelBn: 'ব্যাগ রক্তের ব্যবস্থা সম্পন্ন',
     },
     {
       icon: BookOpen,
-      valueEn: `${(siteSettings?.scholarshipStudentsCount || 230).toLocaleString()}+`,
-      valueBn: `${(siteSettings?.scholarshipStudentsCount || 230).toLocaleString('bn-BD')}+`,
+      valueEn: formatCount(siteSettings?.scholarshipStudentsCount),
+      valueBn: formatCount(siteSettings?.scholarshipStudentsCount, 'bn-BD'),
       labelEn: 'Students Supported',
       labelBn: 'শিক্ষার্থীকে বৃত্তি ও উপকরণ',
     },
     {
       icon: TreePine,
-      valueEn: `${(siteSettings?.treesPlantedCount || 18200).toLocaleString()}+`,
-      valueBn: `${(siteSettings?.treesPlantedCount || 18200).toLocaleString('bn-BD')}+`,
+      valueEn: formatCount(siteSettings?.treesPlantedCount),
+      valueBn: formatCount(siteSettings?.treesPlantedCount, 'bn-BD'),
       labelEn: 'Saplings Planted',
       labelBn: 'বৃক্ষরোপণ ও সবুজায়ন',
     },
@@ -156,16 +161,16 @@ export const HomePage: React.FC = () => {
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>
                   {language === 'bn'
-                    ? siteSettings?.tickerTextBn || 'জাগ্রীতি — অরাজনৈতিক সমাজকল্যাণমূলক যুব সংগঠন'
-                    : siteSettings?.tickerTextEn || 'JAGREETI — Apolitical Socio-Humanitarian Youth Movement'}
+                    ? siteSettings?.tickerTextBn || ''
+                    : siteSettings?.tickerTextEn || ''}
                 </span>
               </div>
 
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
                 {language === 'bn' ? (
-                  <span>{siteSettings?.heroHeadlineBn || 'তারুণ্যের শক্তিতে মানবতার জয়গান'}</span>
+                  <span>{siteSettings?.heroHeadlineBn || ''}</span>
                 ) : (
-                  <span>{siteSettings?.heroHeadlineEn || 'Youth. Humanity. Unconditional Service.'}</span>
+                  <span>{siteSettings?.heroHeadlineEn || ''}</span>
                 )}
               </h1>
 
@@ -295,8 +300,8 @@ export const HomePage: React.FC = () => {
                   </div>
                   <div className="text-lg font-extrabold text-slate-900">
                     {language === 'bn'
-                      ? `${siteSettings?.volunteersCount || 450}+ তরুণ সদস্য`
-                      : `${siteSettings?.volunteersCount || 450}+ Youths`}
+                      ? formatCount(siteSettings?.volunteersCount, 'bn-BD') + ' তরুণ সদস্য'
+                      : formatCount(siteSettings?.volunteersCount) + ' Youths'}
                   </div>
                 </div>
               </motion.div>
@@ -599,14 +604,14 @@ export const HomePage: React.FC = () => {
                 <span>{language === 'bn' ? 'রক্তদাতা ডিরেক্টরি দেখুন' : 'Search Blood Donors'}</span>
               </button>
               <a
-                href={`tel:${siteSettings.contactPhone}`}
+                href={siteSettings?.contactPhone ? `tel:${siteSettings.contactPhone}` : undefined}
                 className="w-full py-3.5 px-6 rounded-2xl bg-rose-950/40 hover:bg-rose-950/60 border border-white/20 text-white font-semibold text-sm text-center transition flex items-center justify-center gap-2"
               >
                 <PhoneCall className="w-4 h-4" />
                 <span>
                   {language === 'bn'
-                    ? `হটলাইন: ${siteSettings.contactPhone}`
-                    : `Blood Hotline: ${siteSettings.contactPhone}`}
+                    ? `হটলাইন: ${siteSettings?.contactPhone || ''}`
+                    : `Blood Hotline: ${siteSettings?.contactPhone || ''}`}
                 </span>
               </a>
             </div>

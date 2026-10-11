@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Save, RefreshCw, Eye, CheckCircle2, Flame, Heart, Sparkles } from 'lucide-react';
 import { useApp } from '../../../context/AppContext';
 
@@ -12,11 +12,15 @@ export const AdminHomeTab: React.FC = () => {
     heroSubheadlineEn: siteSettings?.heroSubheadlineEn || '',
     tickerTextBn: siteSettings?.tickerTextBn || '',
     tickerTextEn: siteSettings?.tickerTextEn || '',
-    beneficiariesCount: siteSettings?.beneficiariesCount || 28500,
-    volunteersCount: siteSettings?.volunteersCount || 450,
-    treesPlantedCount: siteSettings?.treesPlantedCount || 18200,
-    scholarshipStudentsCount: siteSettings?.scholarshipStudentsCount || 230,
+    beneficiariesCount: siteSettings?.beneficiariesCount ?? '',
+    volunteersCount: siteSettings?.volunteersCount ?? '',
+    treesPlantedCount: siteSettings?.treesPlantedCount ?? '',
+    scholarshipStudentsCount: siteSettings?.scholarshipStudentsCount ?? '',
   });
+
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, ...siteSettings }));
+  }, [siteSettings]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;

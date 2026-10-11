@@ -30,25 +30,24 @@ export const NoticesPage: React.FC = () => {
 
   useEffect(() => {
     const openSharedNotice = () => {
-      const hash = window.location.hash.replace(/^#/, '');
-      const [page, query = ''] = hash.split('?');
+      const page = window.location.pathname.replace(/^\/+|\/+$/g, '');
       if (page !== 'notices') return;
-      const noticeId = new URLSearchParams(query).get('notice');
+      const noticeId = new URLSearchParams(window.location.search).get('notice');
       setActiveNotice(noticeId ? notices.find((notice) => notice.id === noticeId) || null : null);
     };
     openSharedNotice();
-    window.addEventListener('hashchange', openSharedNotice);
-    return () => window.removeEventListener('hashchange', openSharedNotice);
+    window.addEventListener('popstate', openSharedNotice);
+    return () => window.removeEventListener('popstate', openSharedNotice);
   }, [notices]);
 
   const openNotice = (notice: NoticeItem) => {
     setActiveNotice(notice);
-    window.history.pushState({}, '', `#notices?notice=${encodeURIComponent(notice.id)}`);
+    window.history.pushState({}, '', `/notices?notice=${encodeURIComponent(notice.id)}`);
   };
 
   const closeNotice = () => {
     setActiveNotice(null);
-    window.history.pushState({}, '', '#notices');
+    window.history.pushState({}, '', '/notices');
   };
 
   const getCategoryBadge = (cat: string) => {
@@ -234,7 +233,7 @@ export const NoticesPage: React.FC = () => {
             <div className="flex items-center justify-between pt-2">
               <button
                 onClick={() => {
-                  const shareUrl = `${window.location.origin}${window.location.pathname}#notices?notice=${encodeURIComponent(activeNotice.id)}`;
+                  const shareUrl = `${window.location.origin}/notices?notice=${encodeURIComponent(activeNotice.id)}`;
                   navigator.clipboard.writeText(shareUrl);
                   showToast(
                     language === 'bn'
