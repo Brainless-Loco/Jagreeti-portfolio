@@ -79,7 +79,7 @@ export const AdminFirebaseDocsTab: React.FC = () => {
       fields: 'heroBadgeBn, heroTitleBn, aboutStoryBn, totalMembersCount, impactStatsCount, contactPhone, contactEmail, facebookUrl, youtubeUrl',
     },
     {
-      name: 'custom_categories',
+      name: 'categories',
       count: 1,
       orderRule: 'Singleton doc: global_taxonomy',
       storageFolder: 'N/A',
@@ -128,11 +128,18 @@ export const AdminFirebaseDocsTab: React.FC = () => {
       fields: 'id, title, titleBn, description, descriptionBn, coverImage, storagePath, category, categoryBn, date, priority',
     },
     {
-      name: 'gallery_media',
+      name: 'gallery_items',
       count: galleryPhotos.length,
       orderRule: 'orderBy("priority", "asc")',
       storageFolder: 'jagreeti_media/gallery/photos/* & videos/*',
       fields: 'id, title, titleBn, category, categoryBn, date, mediaType ("photo"|"video"), image, videoUrl, videoSource ("upload"|"youtube"|"link"), albumId, showAsSingle, priority',
+    },
+    {
+      name: 'admins',
+      count: 0,
+      orderRule: 'Document ID equals Firebase Auth UID',
+      storageFolder: 'N/A',
+      fields: 'email, displayName, role (admin), active, createdAt',
     },
     {
       name: 'notices',
@@ -168,21 +175,25 @@ export const AdminFirebaseDocsTab: React.FC = () => {
 service cloud.firestore {
   match /databases/{database}/documents {
     function isAdmin() {
-      return request.auth != null && request.auth.token.admin == true;
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.active == true &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'admin';
     }
     match /site_settings/{docId} { allow read: if true; allow write: if isAdmin(); }
-    match /custom_categories/{docId} { allow read: if true; allow write: if isAdmin(); }
+    match /categories/{docId} { allow read: if true; allow write: if isAdmin(); }
     match /dignitary_messages/{docId} { allow read: if true; allow write: if isAdmin(); }
     match /committee_groups/{docId} { allow read: if true; allow write: if isAdmin(); }
     match /committee_members/{docId} { allow read: if true; allow write: if isAdmin(); }
     match /programs/{docId} { allow read: if true; allow write: if isAdmin(); }
     match /projects/{docId} { allow read: if true; allow write: if isAdmin(); }
     match /gallery_albums/{docId} { allow read: if true; allow write: if isAdmin(); }
-    match /gallery_media/{docId} { allow read: if true; allow write: if isAdmin(); }
+    match /gallery_items/{docId} { allow read: if true; allow write: if isAdmin(); }
     match /notices/{docId} { allow read: if true; allow write: if isAdmin(); }
     match /blood_donors/{docId} { allow read, create: if true; allow update, delete: if isAdmin(); }
     match /volunteers/{docId} { allow read, create: if true; allow update, delete: if isAdmin(); }
     match /donations/{docId} { allow read, create: if true; allow update, delete: if isAdmin(); }
+    match /admins/{uid} { allow read, write: if isAdmin() && request.auth.uid == uid; }
   }
 }`;
 
@@ -213,6 +224,29 @@ service cloud.firestore {
           <Download className="w-4 h-4" />
           <span>{language === 'bn' ? 'সকল কালেকশন JSON ডাউনলোড' : 'Export All Collections JSON'}</span>
         </button>
+      </div>
+
+      {/* Admin authentication setup */}
+      <div className="p-5 rounded-2xl bg-amber-50 border border-amber-200 space-y-3">
+        <div className="flex items-center gap-2">
+          <ShieldCheck className="w-5 h-5 text-amber-700" />
+          <h3 className="text-sm font-bold text-amber-950">Admin Portal Login Setup</h3>
+        </div>
+        <p className="text-xs text-amber-900 leading-relaxed">
+          Create the first login at <strong>Firebase Console &gt; Authentication &gt; Users &gt; Add user</strong> with Email/Password enabled.
+          Then copy that user&apos;s UID and create <code className="font-mono font-bold">admins/&lt;Auth UID&gt;</code> in Firestore.
+          Never store the password in Firestore.
+        </p>
+        <pre className="p-3 rounded-xl bg-white border border-amber-200 text-[11px] text-slate-800 overflow-x-auto">{`{
+  "email": "admin@example.com",
+  "displayName": "JAGREETI Administrator",
+  "role": "admin",
+  "active": true,
+  "createdAt": "2026-10-11T00:00:00.000Z"
+}`}</pre>
+        <p className="text-[11px] text-amber-800">
+          The document ID must be the Firebase Auth UID, not the email address. The full step-by-step setup is in FIREBASE_SCHEMA_DOCUMENTATION.md.
+        </p>
       </div>
 
       {/* Storage Architecture Overview */}
@@ -251,7 +285,7 @@ service cloud.firestore {
         <div className="px-5 py-3.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
           <span className="text-xs font-bold text-slate-800 flex items-center gap-2">
             <Layers className="w-4 h-4 text-[#10564f]" />
-            Firestore Collections Schema (13 Collections)
+            Firestore Collections Schema (14 Collections)
           </span>
           <span className="text-[11px] text-slate-500">
             Full documentation saved at <code className="font-mono text-[#04345c] font-bold">/FIREBASE_SCHEMA_DOCUMENTATION.md</code>

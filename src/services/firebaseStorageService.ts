@@ -1,3 +1,5 @@
+import { firebaseConfigured, uploadFileToStorage } from './firebaseService';
+
 export type StorageFolder =
   | 'dignitaries'
   | 'committee'
@@ -32,8 +34,7 @@ export interface UploadResult {
 }
 
 const DEFAULT_STORAGE_BUCKET =
-  (import.meta as any).env?.VITE_FIREBASE_STORAGE_BUCKET ||
-  'jagreeti-foundation.appspot.com';
+  (import.meta as any).env?.VITE_FIREBASE_STORAGE_BUCKET || 'jagreeti-foundation.appspot.com';
 
 /**
  * Compresses & resizes an image file using HTML5 Canvas so it can be stored
@@ -91,8 +92,8 @@ async function processVideoFile(file: File): Promise<string> {
 }
 
 /**
- * Uploads a photo or video file to Firebase Storage bucket path structure
- * (`gs://<bucket>/<folder>/<timestamp>_<filename>`) with progress reporting.
+ * Uploads a photo or video file to Firebase Storage using a dated folder and
+ * a collision-resistant filename so files can share the same content folder.
  */
 export async function uploadMediaToFirebaseStorage(
   file: File,
@@ -100,21 +101,19 @@ export async function uploadMediaToFirebaseStorage(
   onProgress?: (percent: number) => void
 ): Promise<UploadResult> {
   const sanitizedName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-  const timestamp = Date.now();
-  const storagePath = `gs://${DEFAULT_STORAGE_BUCKET}/${folder}/${timestamp}_${sanitizedName}`;
+  if (!firebaseConfigured) {
+    throw new Error('Firebase is not configured. Add the VITE_FIREBASE_* variables first.');
+  }
+  const now = new Date();
+  const dateFolder = now.toISOString().slice(0, 10);
+  const storagePath = `jagreeti_media/${folder}/${dateFolder}/${now.getTime()}_${sanitizedName}`;
 
   if (onProgress) onProgress(15);
   await new Promise((r) => setTimeout(r, 120));
   if (onProgress) onProgress(55);
 
-  let url = '';
-  if (file.type.startsWith('image/')) {
-    url = await compressImageFile(file);
-  } else if (file.type.startsWith('video/')) {
-    url = await processVideoFile(file);
-  } else {
-    url = URL.createObjectURL(file);
-  }
+  const uploaded = await uploadFileToStorage(file, storagePath);
+  const url = uploaded.url;
 
   if (onProgress) onProgress(90);
   await new Promise((r) => setTimeout(r, 100));
@@ -122,7 +121,7 @@ export async function uploadMediaToFirebaseStorage(
 
   return {
     url,
-    storagePath,
+    storagePath: `gs://${DEFAULT_STORAGE_BUCKET}/${storagePath}`,
     fileName: sanitizedName,
     fileSize: file.size,
     mimeType: file.type,

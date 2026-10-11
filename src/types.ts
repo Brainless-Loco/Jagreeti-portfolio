@@ -131,6 +131,8 @@ export interface NoticeItem {
   summaryBn: string;
   content: string;
   contentBn: string;
+  image?: string;
+  storagePath?: string;
   isUrgent?: boolean;
 }
 

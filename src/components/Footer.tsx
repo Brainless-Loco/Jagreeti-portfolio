@@ -100,7 +100,7 @@ export const Footer: React.FC = () => {
               </div>
               <div className="flex items-center gap-2 text-slate-300">
                 <Mail className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>contact@jagreetibd.org</span>
+                <span>jagreeti1968ctg@gmail.com</span>
               </div>
             </div>
           </div>
@@ -168,7 +168,7 @@ export const Footer: React.FC = () => {
                   <span>{t.nav.notices}</span>
                 </button>
               </li>
-              <li>
+              {/* <li>
                 <button
                   onClick={() => {
                     setActivePage('admin');
@@ -179,7 +179,7 @@ export const Footer: React.FC = () => {
                   <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
                   <span>{t.nav.admin}</span>
                 </button>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -206,6 +206,13 @@ export const Footer: React.FC = () => {
         <div className="mt-12 pt-6 border-t border-slate-850 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div>
             © {new Date().getFullYear()} JAGREETI (জাগৃতি) Foundation. All Rights Reserved.
+          </div>
+          {/* Developed by Brainless Loco */}
+          <div className="flex items-center gap-1.5">
+            <span>Developed by</span>
+            <a  href="https://github.com/Brainless-Loco" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 transition font-bold">
+              Brainless Loco
+            </a>
           </div>
           <div className="flex items-center gap-4">
             <span className="text-[11px] text-slate-400">

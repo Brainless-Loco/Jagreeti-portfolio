@@ -281,7 +281,7 @@ export const HomePage: React.FC = () => {
               {/* Parallax Floating Card */}
               <motion.div
                 style={{ y: heroFloatingBadgeY }}
-                className="hidden sm:flex absolute -bottom-5 -left-6 bg-white p-4 rounded-2xl shadow-xl border border-slate-200/80 items-center gap-3.5 will-change-transform"
+                className="hidden sm:flex absolute bottom-55 -left-6 bg-white p-4 rounded-2xl shadow-xl border border-slate-200/80 items-center gap-3.5 will-change-transform"
               >
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center text-white shrink-0"

@@ -1191,7 +1191,7 @@ export const INITIAL_SITE_SETTINGS: SiteSettings = {
   treesPlantedCount: 18200,
   scholarshipStudentsCount: 230,
   contactPhone: '+880 1744-769331',
-  contactEmail: 'contact@jagreetibd.org',
+  contactEmail: 'jagreeti1968ctg@gmail.com',
   emergencyHotline: '+880 1744-769331',
   officeAddressEn: 'JAGREETI Central Complex, Station Road, Lalmonirhat - 5500, Bangladesh',
   officeAddressBn: 'জাগ্রীতি কেন্দ্রীয় কমপ্লেক্স, স্টেশন রোড, লালমনিরহাট - ৫৫০০, বাংলাদেশ',

@@ -16,7 +16,7 @@ export const AdminContactTab: React.FC = () => {
   const [formData, setFormData] = useState({
     contactPhone: siteSettings?.contactPhone || '+880 1744-769331',
     emergencyPhone: siteSettings?.emergencyPhone || '+880 1744-769331',
-    contactEmail: siteSettings?.contactEmail || 'contact@jagreetibd.org',
+    contactEmail: siteSettings?.contactEmail || 'jagreeti1968ctg@gmail.com',
     officeAddressBn: siteSettings?.officeAddressBn || 'কলেজ রোড, বাটার মোড় সংলগ্ন, লালমনিরহাট সদর, বাংলাদেশ',
     officeAddressEn: siteSettings?.officeAddressEn || 'College Road, Near Butter More, Lalmonirhat Sadar, Bangladesh',
     facebookUrl: siteSettings?.facebookUrl || 'https://facebook.com/jagreetibd',

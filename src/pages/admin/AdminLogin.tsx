@@ -13,6 +13,7 @@ import {
   KeyRound,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { signInAdmin } from '../../services/firebaseService';
 
 interface AdminLoginProps {
   onLoginSuccess: () => void;
@@ -20,50 +21,38 @@ interface AdminLoginProps {
 
 export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
   const { language, setActivePage, showToast } = useApp();
-  const [username, setUsername] = useState<string>('admin');
-  const [password, setPassword] = useState<string>('admin123');
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    const trimmedUser = username.trim().toLowerCase();
-    const trimmedPass = password.trim();
-
-    // Accepted demo credentials for admin access
-    const validUsers = ['admin', 'jagreeti', 'admin@jagreetibd.org', 'superadmin'];
-    const validPasswords = ['admin', 'admin123', 'jagreeti2025', '123456'];
-
     setIsLoading(true);
-
-    setTimeout(() => {
-      if (validUsers.includes(trimmedUser) && validPasswords.includes(trimmedPass)) {
-        localStorage.setItem('jagreeti_admin_auth', 'true');
-        showToast(
-          language === 'bn'
-            ? 'সফলভাবে অ্যাডমিন প্যানেলে লগইন সম্পন্ন হয়েছে।'
-            : 'Welcome back, Administrator! Signed in successfully.',
-          'success'
-        );
-        onLoginSuccess();
-      } else {
-        setError(
-          language === 'bn'
-            ? 'ভুল ইউজারনেম অথবা পাসওয়ার্ড প্রদান করা হয়েছে।'
-            : 'Invalid username or password. Please use the default credentials below.'
-        );
-        setIsLoading(false);
-      }
-    }, 400);
-  };
-
-  const fillQuickCredentials = () => {
-    setUsername('admin');
-    setPassword('admin123');
-    setError('');
+    try {
+      await signInAdmin(username.trim(), password);
+      localStorage.setItem('jagreeti_admin_auth', 'true');
+      showToast(
+        language === 'bn'
+          ? 'সফলভাবে অ্যাডমিন প্যানেলে লগইন সম্পন্ন হয়েছে।'
+          : 'Welcome back, Administrator! Signed in successfully.',
+        'success'
+      );
+      onLoginSuccess();
+    } catch(err) {
+      console.error('Admin login failed. Check Firebase admin credentials.');
+      console.log(err);
+      setError(
+        language === 'bn'
+          ? 'লগইন ব্যর্থ হয়েছে। Firebase অ্যাডমিন অ্যাকাউন্টের তথ্য যাচাই করুন।'
+          : 'Sign-in failed. Check the Firebase admin email and password.'
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -124,7 +113,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="admin"
+                  placeholder="admin@example.com"
                   className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1e77bd] focus:border-transparent transition"
                 />
               </div>
@@ -175,23 +164,6 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
               <ArrowRight className="w-4 h-4 ml-1" />
             </button>
           </form>
-
-          {/* Quick Credential Helper Pill */}
-          <div className="pt-2 border-t border-slate-100">
-            <div className="p-3 rounded-2xl bg-amber-50/80 border border-amber-200/80 text-amber-900 text-xs flex items-center justify-between gap-2">
-              <div className="text-[11px] leading-snug">
-                <span className="font-bold">{language === 'bn' ? 'ডিফল্ট তথ্য:' : 'Default Credentials:'}</span>{' '}
-                <span className="font-mono font-semibold">admin</span> / <span className="font-mono font-semibold">admin123</span>
-              </div>
-              <button
-                type="button"
-                onClick={fillQuickCredentials}
-                className="px-2.5 py-1 rounded-lg bg-amber-600 text-white font-bold text-[11px] hover:bg-amber-700 transition shrink-0"
-              >
-                {language === 'bn' ? 'স্বয়ংক্রিয় পূরণ' : 'Auto Fill'}
-              </button>
-            </div>
-          </div>
 
           {/* Return to website */}
           <div className="text-center pt-1">

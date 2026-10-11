@@ -6,7 +6,7 @@ This document serves as the **single authoritative reference** for setting up **
 
 ## 1. Architecture Overview
 
-All dynamic content, media metadata, priority ordering (`priority`), custom categories, albums, committee tags/groups, and operational records are structured around **12 Firestore Collections** and **7 Firebase Storage Directories**.
+All dynamic content, media metadata, priority ordering (`priority`), custom categories, albums, committee tags/groups, admin profiles, and operational records are structured around **14 Firestore Collections** and **7 Firebase Storage Directories**.
 
 ### Environment Variables (`.env`)
 ```env
@@ -21,7 +21,48 @@ VITE_FIRESTORE_DATABASE_ID=(default)
 
 ---
 
-## 2. Firebase Cloud Storage Folder Hierarchy
+## 2. Admin Portal Authentication and First Admin
+
+The Admin Portal does **not** store passwords in Firestore. The login form uses **Firebase Authentication > Email/Password** and signs in with `signInWithEmailAndPassword`. Firestore and Storage access is then checked against the signed-in user's UID.
+
+### Create the first admin
+
+1. Open **Firebase Console > your project > Authentication > Sign-in method** and enable **Email/Password**.
+2. Open **Authentication > Users > Add user**.
+3. Create the first administrator with the real admin email address and a strong password. Do not put the password in Firestore, source code, or this document.
+4. Copy the new user's **UID**.
+5. Open **Firestore Database > Data**, create a top-level collection named `admins`, and create a document whose ID is exactly that copied UID.
+6. Add the profile fields shown below. The `active` field is used as an operational switch for disabling access without deleting the Auth account.
+
+The admin then opens the website's `#admin` link and signs in with the Auth email/password. A Firestore document called `admins/admin@example.com` is only an example of the shape; the real document ID must be the Firebase Auth UID, not the email address.
+
+### Sample document: `admins/{firebaseAuthUid}`
+
+```json
+{
+  "email": "admin@example.com",
+  "displayName": "JAGREETI Administrator",
+  "role": "admin",
+  "active": true,
+  "createdAt": "2026-10-11T00:00:00.000Z"
+}
+```
+
+The document ID is the Auth user's UID, for example:
+
+```text
+admins/AbCdEfGhIjKlMnOpQrStUvWxYz12
+```
+
+Do not create a document with a literal ID such as `admin` unless the Auth UID is actually `admin`.
+
+### Optional custom claim
+
+For larger deployments, also set the Firebase Auth custom claim `{ "admin": true }` using a trusted Admin SDK script or Cloud Function. Never set claims from the browser. The rules below use the `admins/{uid}` document as the source of truth, so the profile document must still exist and have `active: true`.
+
+---
+
+## 3. Firebase Cloud Storage Folder Hierarchy
 
 Whenever an administrator uploads a photo or video in the Admin Panel (instead of pasting an external link), the file is stored in Firebase Cloud Storage under these standardized paths and its public download URL (`getDownloadURL`) + `storagePath` are saved in the corresponding Firestore document:
 
@@ -37,9 +78,9 @@ Whenever an administrator uploads a photo or video in the Admin Panel (instead o
 
 ---
 
-## 3. Firestore Collections & Document Schemas
+## 4. Firestore Collections & Document Schemas
 
-### 3.1 `site_settings` (Single Document: `site_settings/global`)
+### 4.1 `site_settings` (Single Document: `site_settings/global_config`)
 Stores global homepage hero copy, live impact counters, ticker text, organizational history, mission/vision, and headquarters contact details.
 
 ```json
@@ -74,7 +115,7 @@ Stores global homepage hero copy, live impact counters, ticker text, organizatio
 
 ---
 
-### 3.2 `dignitary_messages` (Collection: `/dignitary_messages/{messageId}`)
+### 4.2 `dignitary_messages` (Collection: `/dignitary_messages/{messageId}`)
 Stores speeches from the Chief Advisor, Founder, Central President, General Secretary, and any additional patrons.
 - **Default Query**: `orderBy('priority', 'asc')`
 
@@ -100,7 +141,7 @@ Stores speeches from the Chief Advisor, Founder, Central President, General Secr
 
 ---
 
-### 3.3 `committee_members` (Collection: `/committee_members/{memberId}`)
+### 4.3 `committee_members` (Collection: `/committee_members/{memberId}`)
 Stores the unified leadership directory. Members appear in a **single serialized list** ordered by `priority`, enriched with multiple `tags` and an optional `groupId`.
 - **Default Query**: `orderBy('priority', 'asc')`
 
@@ -125,7 +166,7 @@ Stores the unified leadership directory. Members appear in a **single serialized
 
 ---
 
-### 3.4 `committee_groups` (Collection: `/committee_groups/{groupId}`) — *Optional Groups*
+### 4.4 `committee_groups` (Collection: `/committee_groups/{groupId}`) — *Optional Groups*
 Allows admins to optionally organize committee members into serialized sections/groups while preserving the unified member list.
 - **Default Query**: `orderBy('priority', 'asc')`
 
@@ -140,7 +181,7 @@ Allows admins to optionally organize committee members into serialized sections/
 
 ---
 
-### 3.5 `programs` (Collection: `/programs/{programId}`)
+### 4.5 `programs` (Collection: `/programs/{programId}`)
 Stores permanent organizational wings and core service pillars.
 - **Default Query**: `orderBy('priority', 'asc')`
 
@@ -162,7 +203,7 @@ Stores permanent organizational wings and core service pillars.
 
 ---
 
-### 3.6 `projects` (Collection: `/projects/{projectId}`)
+### 4.6 `projects` (Collection: `/projects/{projectId}`)
 Stores active, upcoming, and completed humanitarian relief campaigns.
 - **Default Query**: `orderBy('priority', 'asc')`
 
@@ -186,7 +227,7 @@ Stores active, upcoming, and completed humanitarian relief campaigns.
 
 ---
 
-### 3.7 `gallery_albums` (Collection: `/gallery_albums/{albumId}`)
+### 4.7 `gallery_albums` (Collection: `/gallery_albums/{albumId}`)
 Stores multi-photo/video albums displayed alongside single items in the main portfolio.
 - **Default Query**: `orderBy('priority', 'asc')`
 
@@ -205,7 +246,7 @@ Stores multi-photo/video albums displayed alongside single items in the main por
 
 ---
 
-### 3.8 `gallery_items` (Collection: `/gallery_items/{itemId}`)
+### 4.8 `gallery_items` (Collection: `/gallery_items/{itemId}`)
 Stores both **Photos** (uploaded or linked) and **Videos** (uploaded video files or YouTube embed links), either standalone or linked to a `gallery_albums` document via `albumId`.
 - **Default Query**: `orderBy('priority', 'asc')`
 
@@ -229,7 +270,7 @@ Stores both **Photos** (uploaded or linked) and **Videos** (uploaded video files
 
 ---
 
-### 3.9 `notices` (Collection: `/notices/{noticeId}`)
+### 4.9 `notices` (Collection: `/notices/{noticeId}`)
 Stores official circulars, AGM calls, and scholarship announcements.
 - **Default Query**: `orderBy('date', 'desc')` *(Strictly ordered by date, newest first)*
 
@@ -248,7 +289,7 @@ Stores official circulars, AGM calls, and scholarship announcements.
 
 ---
 
-### 3.10 `categories` (Document: `categories/registry`)
+### 4.10 `categories` (Document: `categories/registry`)
 Stores the deduplicated list of autocomplete categories and tags across all modules so admins can select existing categories or seamlessly add new ones.
 
 ```json
@@ -264,14 +305,14 @@ Stores the deduplicated list of autocomplete categories and tags across all modu
 
 ---
 
-### 3.11 `volunteers`, `donations`, & `blood_donors`
+### 4.11 `volunteers`, `donations`, & `blood_donors`
 - **`volunteers/{volunteerId}`**: `{ id, fullName, email, phone, bloodGroup, wing, skills, district, institution, motivation, status: 'pending' | 'approved', appliedDate }`
 - **`donations/{donationId}`**: `{ id, donorName, amount, method: 'bKash' | 'Nagad' | 'Rocket' | 'Bank', trxId, phone, cause, date, status: 'pending' | 'verified' }`
 - **`blood_donors/{donorId}`**: `{ id, name, nameBn, bloodGroup, phone, whatsapp, district, upazila, lastDonationDate, available, totalDonations, verified }`
 
 ---
 
-## 4. Recommended Firestore Security Rules (`firestore.rules`)
+## 5. Recommended Firestore Security Rules (`firestore.rules`)
 
 ```javascript
 rules_version = '2';
@@ -279,7 +320,9 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function isAdmin() {
       return request.auth != null &&
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.active == true &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'admin';
     }
 
     // Public Content Collections: Publicly readable, Admin-only write

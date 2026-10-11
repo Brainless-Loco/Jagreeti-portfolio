@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Bell,
   Calendar,
@@ -27,6 +27,29 @@ export const NoticesPage: React.FC = () => {
   const filteredNotices = notices.filter(
     (n) => selectedCategory === 'all' || n.category.toLowerCase() === selectedCategory.toLowerCase()
   );
+
+  useEffect(() => {
+    const openSharedNotice = () => {
+      const hash = window.location.hash.replace(/^#/, '');
+      const [page, query = ''] = hash.split('?');
+      if (page !== 'notices') return;
+      const noticeId = new URLSearchParams(query).get('notice');
+      setActiveNotice(noticeId ? notices.find((notice) => notice.id === noticeId) || null : null);
+    };
+    openSharedNotice();
+    window.addEventListener('hashchange', openSharedNotice);
+    return () => window.removeEventListener('hashchange', openSharedNotice);
+  }, [notices]);
+
+  const openNotice = (notice: NoticeItem) => {
+    setActiveNotice(notice);
+    window.history.pushState({}, '', `#notices?notice=${encodeURIComponent(notice.id)}`);
+  };
+
+  const closeNotice = () => {
+    setActiveNotice(null);
+    window.history.pushState({}, '', '#notices');
+  };
 
   const getCategoryBadge = (cat: string) => {
     switch (cat.toLowerCase()) {
@@ -134,7 +157,7 @@ export const NoticesPage: React.FC = () => {
             return (
               <div
                 key={notice.id}
-                onClick={() => setActiveNotice(notice)}
+                onClick={() => openNotice(notice)}
                 className="group cursor-pointer p-6 rounded-3xl bg-white border border-slate-200/80 shadow-xs hover:shadow-lg transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
               >
                 <div className="space-y-2.5 max-w-2xl">
@@ -181,14 +204,14 @@ export const NoticesPage: React.FC = () => {
       {activeNotice && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs"
-          onClick={() => setActiveNotice(null)}
+          onClick={closeNotice}
         >
           <div
             className="relative w-full max-w-2xl rounded-3xl bg-white border border-slate-200 p-6 sm:p-8 shadow-2xl space-y-6 max-h-[85vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <button
-              onClick={() => setActiveNotice(null)}
+              onClick={closeNotice}
               className="absolute top-5 right-5 p-2 rounded-xl bg-slate-100 text-slate-500 hover:text-slate-900 cursor-pointer"
             >
               <X className="w-5 h-5" />
@@ -211,7 +234,8 @@ export const NoticesPage: React.FC = () => {
             <div className="flex items-center justify-between pt-2">
               <button
                 onClick={() => {
-                  navigator.clipboard.writeText(window.location.href);
+                  const shareUrl = `${window.location.origin}${window.location.pathname}#notices?notice=${encodeURIComponent(activeNotice.id)}`;
+                  navigator.clipboard.writeText(shareUrl);
                   showToast(
                     language === 'bn'
                       ? 'নোটিশের লিংক কপি করা হয়েছে!'

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ShieldAlert, ExternalLink, LogOut, Database } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { AdminLogin } from './admin/AdminLogin';
@@ -17,6 +17,7 @@ import { AdminVolunteersTab } from './admin/tabs/AdminVolunteersTab';
 import { AdminDonationsTab } from './admin/tabs/AdminDonationsTab';
 import { AdminContactTab } from './admin/tabs/AdminContactTab';
 import { AdminFirebaseDocsTab } from './admin/tabs/AdminFirebaseDocsTab';
+import { auth, onAuthStateChanged, signOut } from '../services/firebaseService';
 
 const ADMIN_AUTH_STORAGE_KEY = 'jagreeti_admin_authenticated_v1';
 
@@ -35,14 +36,14 @@ export const AdminPanelPage: React.FC = () => {
     donations,
   } = useApp();
 
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return (
-      sessionStorage.getItem(ADMIN_AUTH_STORAGE_KEY) === 'true' ||
-      localStorage.getItem('jagreeti_admin_auth') === 'true'
-    );
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   const [activeSection, setActiveSection] = useState<AdminSectionId>('overview');
+
+  useEffect(() => {
+    if (!auth) return;
+    return onAuthStateChanged(auth, (user) => setIsAuthenticated(Boolean(user)));
+  }, []);
 
   const handleLoginSuccess = () => {
     sessionStorage.setItem(ADMIN_AUTH_STORAGE_KEY, 'true');
@@ -54,6 +55,7 @@ export const AdminPanelPage: React.FC = () => {
     sessionStorage.removeItem(ADMIN_AUTH_STORAGE_KEY);
     localStorage.removeItem('jagreeti_admin_auth');
     setIsAuthenticated(false);
+    if (auth) void signOut(auth);
   };
 
   if (!isAuthenticated) {

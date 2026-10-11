@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useRef } from 'react';
 import {
   Language,
   PaletteId,
@@ -38,6 +38,13 @@ import {
   INITIAL_CUSTOM_CATEGORIES,
 } from '../data/initialData';
 import { translations } from '../translations';
+import {
+  firebaseConfigured,
+  replaceCollection,
+  replaceSingleton,
+  removeStorageFile,
+  subscribeToCollection,
+} from '../services/firebaseService';
 
 interface Toast {
   id: string;
@@ -185,6 +192,30 @@ function swapPriorityInList<T extends { id: string; priority?: number }>(
   return sortByPriority(sorted);
 }
 
+function useFirestoreCollection<T extends { id: string }>(
+  collectionName: string
+): [T[], React.Dispatch<React.SetStateAction<T[]>>] {
+  const [items, setItems] = useState<T[]>([]);
+  const hydrated = useRef(false);
+
+  useEffect(() => {
+    if (!firebaseConfigured) return;
+    return subscribeToCollection<T>(collectionName, (nextItems) => {
+      hydrated.current = true;
+      setItems(nextItems);
+    });
+  }, [collectionName]);
+
+  useEffect(() => {
+    if (!firebaseConfigured || !hydrated.current) return;
+    void replaceCollection(collectionName, items).catch((error) =>
+      console.error(`Unable to save ${collectionName}:`, error)
+    );
+  }, [collectionName, items]);
+
+  return [items, setItems];
+}
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>(() => {
     const saved = localStorage.getItem('jagreeti_lang');
@@ -196,221 +227,72 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return (saved as PaletteId) || 'emerald';
   });
 
-  const [activePage, setActivePage] = useState<string>('home');
+  const [activePage, setActivePageState] = useState<string>(() => {
+    const hashPage = window.location.hash.replace(/^#/, '').split('?')[0];
+    return hashPage || 'home';
+  });
+
+  const setActivePage = (page: string) => {
+    setActivePageState(page);
+    const query = page === 'notices' ? window.location.hash.split('?')[1] : '';
+    window.history.pushState({}, '', `#${page}${query ? `?${query}` : ''}`);
+  };
+
+  useEffect(() => {
+    const syncPageFromUrl = () => {
+      const hashPage = window.location.hash.replace(/^#/, '').split('?')[0];
+      setActivePageState(hashPage || 'home');
+    };
+    window.addEventListener('popstate', syncPageFromUrl);
+    window.addEventListener('hashchange', syncPageFromUrl);
+    return () => {
+      window.removeEventListener('popstate', syncPageFromUrl);
+      window.removeEventListener('hashchange', syncPageFromUrl);
+    };
+  }, []);
 
   // Custom Categories Registry
-  const [customCategories, setCustomCategories] = useState<CustomCategoriesMap>(() => {
-    const saved = localStorage.getItem('jagreeti_custom_categories');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        return {
-          ...INITIAL_CUSTOM_CATEGORIES,
-          ...parsed,
-          gallery: parsed.gallery || parsed.galleryCategories || INITIAL_CUSTOM_CATEGORIES.gallery,
-          galleryCategories:
-            parsed.galleryCategories || parsed.gallery || INITIAL_CUSTOM_CATEGORIES.galleryCategories,
-          projects: parsed.projects || parsed.projectCategories || INITIAL_CUSTOM_CATEGORIES.projects,
-          projectCategories:
-            parsed.projectCategories || parsed.projects || INITIAL_CUSTOM_CATEGORIES.projectCategories,
-          programs: parsed.programs || parsed.programCategories || INITIAL_CUSTOM_CATEGORIES.programs,
-          programCategories:
-            parsed.programCategories || parsed.programs || INITIAL_CUSTOM_CATEGORIES.programCategories,
-          notices: parsed.notices || parsed.noticeCategories || INITIAL_CUSTOM_CATEGORIES.notices,
-          noticeCategories:
-            parsed.noticeCategories || parsed.notices || INITIAL_CUSTOM_CATEGORIES.noticeCategories,
-          donations: parsed.donations || parsed.donationCauses || INITIAL_CUSTOM_CATEGORIES.donations,
-          donationCauses:
-            parsed.donationCauses || parsed.donations || INITIAL_CUSTOM_CATEGORIES.donationCauses,
-        };
-      } catch {
-        return INITIAL_CUSTOM_CATEGORIES;
-      }
-    }
-    return INITIAL_CUSTOM_CATEGORIES;
-  });
+  const [customCategories, setCustomCategories] = useState<CustomCategoriesMap>({});
+  const categoriesHydrated = useRef(false);
 
   // Site Settings
-  const [siteSettings, setSiteSettings] = useState<SiteSettings>(() => {
-    const saved = localStorage.getItem('jagreeti_site_settings');
-    if (saved) {
-      try {
-        return { ...INITIAL_SITE_SETTINGS, ...JSON.parse(saved) };
-      } catch {
-        return INITIAL_SITE_SETTINGS;
-      }
-    }
-    return INITIAL_SITE_SETTINGS;
-  });
+  const [siteSettings, setSiteSettings] = useState<SiteSettings>({} as SiteSettings);
+  const siteSettingsHydrated = useRef(false);
 
   // Dignitary Messages
-  const [rawDignitaryMessages, setDignitaryMessages] = useState<DignitaryMessage[]>(() => {
-    const saved = localStorage.getItem('jagreeti_dignitaries');
-    const source: any[] = saved
-      ? (() => {
-          try {
-            return JSON.parse(saved);
-          } catch {
-            return INITIAL_DIGNITARY_MESSAGES;
-          }
-        })()
-      : INITIAL_DIGNITARY_MESSAGES;
-
-    return source.map((m, idx) => ({
-      ...m,
-      name: m.name || m.authorEn || m.authorBn || '',
-      nameBn: m.nameBn || m.authorBn || m.authorEn || '',
-      title: m.title || m.titleEn || m.titleBn || '',
-      titleBn: m.titleBn || m.title || '',
-      designation: m.designation || m.role || m.designationEn || m.designationBn || '',
-      designationBn: m.designationBn || m.roleBn || m.designation || '',
-      role: m.role || m.designation || '',
-      roleBn: m.roleBn || m.designationBn || '',
-      image: m.image || m.photoUrl || '',
-      quote: m.quote || m.quoteEn || m.quoteBn || m.message || '',
-      quoteBn: m.quoteBn || m.quote || m.messageBn || '',
-      fullMessage: m.fullMessage || m.messageEn || m.message || m.quote || '',
-      fullMessageBn: m.fullMessageBn || m.messageBn || m.fullMessage || m.quoteBn || '',
-      message: m.message || m.quote || m.fullMessage || '',
-      messageBn: m.messageBn || m.quoteBn || m.fullMessageBn || '',
-      priority: m.priority ?? idx + 1,
-    }));
-  });
+  const [rawDignitaryMessages, setDignitaryMessages] = useFirestoreCollection<DignitaryMessage>(
+    'dignitary_messages'
+  );
 
   // Committee Groups
-  const [rawCommitteeGroups, setCommitteeGroups] = useState<CommitteeGroup[]>(() => {
-    const saved = localStorage.getItem('jagreeti_committee_groups');
-    return saved ? JSON.parse(saved) : INITIAL_COMMITTEE_GROUPS;
-  });
+  const [rawCommitteeGroups, setCommitteeGroups] = useFirestoreCollection<CommitteeGroup>('committee_groups');
 
   // Committee Members
-  const [rawCommittee, setCommittee] = useState<CommitteeMember[]>(() => {
-    const saved = localStorage.getItem('jagreeti_committee');
-    if (saved) {
-      try {
-        const parsed: CommitteeMember[] = JSON.parse(saved);
-        return parsed.map((m, idx) => ({
-          ...m,
-          priority: m.priority ?? idx + 1,
-          tags:
-            m.tags && m.tags.length > 0
-              ? m.tags
-              : m.category === 'advisory'
-              ? ['Advisory Board']
-              : m.category === 'subcommittee'
-              ? ['Wing Coordinator']
-              : ['Executive Council'],
-          groupId:
-            m.groupId !== undefined
-              ? m.groupId
-              : m.category === 'advisory'
-              ? 'grp-advisory'
-              : m.category === 'subcommittee'
-              ? 'grp-coordinators'
-              : 'grp-executive',
-        }));
-      } catch {
-        return INITIAL_COMMITTEE;
-      }
-    }
-    return INITIAL_COMMITTEE;
-  });
+  const [rawCommittee, setCommittee] = useFirestoreCollection<CommitteeMember>('committee_members');
 
   // Programs
-  const [rawPrograms, setPrograms] = useState<ProgramItem[]>(() => {
-    const saved = localStorage.getItem('jagreeti_programs');
-    if (saved) {
-      try {
-        const parsed: ProgramItem[] = JSON.parse(saved);
-        return parsed.map((p, idx) => ({ ...p, priority: p.priority ?? idx + 1 }));
-      } catch {
-        return INITIAL_PROGRAMS;
-      }
-    }
-    return INITIAL_PROGRAMS;
-  });
+  const [rawPrograms, setPrograms] = useFirestoreCollection<ProgramItem>('programs');
 
   // Projects
-  const [rawProjects, setProjects] = useState<ProjectItem[]>(() => {
-    const saved = localStorage.getItem('jagreeti_projects');
-    const source: ProjectItem[] = saved
-      ? (() => {
-          try {
-            return JSON.parse(saved);
-          } catch {
-            return INITIAL_PROJECTS;
-          }
-        })()
-      : INITIAL_PROJECTS;
-    return source.map((p, idx) => ({
-      ...p,
-      priority: p.priority ?? idx + 1,
-      categoryBn: p.categoryBn || p.category,
-      locationBn: p.locationBn || p.location,
-      date: p.date || p.startDate || '2026',
-      dateBn: p.dateBn || p.date || p.startDate || '২০২৬',
-      beneficiariesBn: p.beneficiariesBn || `${p.beneficiaries}+`,
-      budget: p.budget || (p.targetAmount ? `৳ ${p.targetAmount.toLocaleString()}` : undefined),
-    }));
-  });
+  const [rawProjects, setProjects] = useFirestoreCollection<ProjectItem>('projects');
 
   // Notices (Date ordered)
-  const [rawNotices, setNotices] = useState<NoticeItem[]>(() => {
-    const saved = localStorage.getItem('jagreeti_notices');
-    return saved ? JSON.parse(saved) : INITIAL_NOTICES;
-  });
+  const [rawNotices, setNotices] = useFirestoreCollection<NoticeItem>('notices');
 
   // Gallery Albums
-  const [rawGalleryAlbums, setGalleryAlbums] = useState<GalleryAlbum[]>(() => {
-    const saved = localStorage.getItem('jagreeti_gallery_albums');
-    return saved ? JSON.parse(saved) : INITIAL_GALLERY_ALBUMS;
-  });
+  const [rawGalleryAlbums, setGalleryAlbums] = useFirestoreCollection<GalleryAlbum>('gallery_albums');
 
   // Gallery Items (Photos & Videos)
-  const [rawGalleryPhotos, setGalleryPhotos] = useState<GalleryPhoto[]>(() => {
-    const saved = localStorage.getItem('jagreeti_gallery');
-    const source: any[] = saved
-      ? (() => {
-          try {
-            return JSON.parse(saved);
-          } catch {
-            return INITIAL_GALLERY;
-          }
-        })()
-      : INITIAL_GALLERY;
-    return source.map((g, idx) => {
-      const resolvedImg = g.image || g.imageUrl || '';
-      return {
-        ...g,
-        title: g.title || g.titleEn || g.titleBn || 'Gallery Item',
-        titleBn: g.titleBn || g.title || 'গ্যালারি চিত্র',
-        categoryBn: g.categoryBn || g.category,
-        image: resolvedImg,
-        imageUrl: resolvedImg,
-        mediaType: g.mediaType || 'photo',
-        showAsSingle: g.showAsSingle !== undefined ? g.showAsSingle : true,
-        priority: g.priority ?? idx + 1,
-      };
-    });
-  });
+  const [rawGalleryPhotos, setGalleryPhotos] = useFirestoreCollection<GalleryPhoto>('gallery_items');
 
   // Volunteers
-  const [volunteers, setVolunteers] = useState<VolunteerApplication[]>(() => {
-    const saved = localStorage.getItem('jagreeti_volunteers');
-    return saved ? JSON.parse(saved) : INITIAL_VOLUNTEERS;
-  });
+  const [volunteers, setVolunteers] = useFirestoreCollection<VolunteerApplication>('volunteers');
 
   // Donations
-  const [donations, setDonations] = useState<DonationRecord[]>(() => {
-    const saved = localStorage.getItem('jagreeti_donations');
-    return saved ? JSON.parse(saved) : INITIAL_DONATIONS;
-  });
+  const [donations, setDonations] = useFirestoreCollection<DonationRecord>('donations');
 
   // Donors
-  const [donors, setDonors] = useState<BloodDonor[]>(() => {
-    const saved = localStorage.getItem('jagreeti_donors');
-    return saved ? JSON.parse(saved) : INITIAL_DONORS;
-  });
+  const [donors, setDonors] = useFirestoreCollection<BloodDonor>('blood_donors');
 
   const [userGoals, setUserGoals] = useState<UserGoal[]>(() => {
     const saved = localStorage.getItem('jagreeti_user_goals');
@@ -510,19 +392,39 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
-  useEffect(() => safeSave('jagreeti_custom_categories', customCategories), [customCategories]);
-  useEffect(() => safeSave('jagreeti_site_settings', siteSettings), [siteSettings]);
-  useEffect(() => safeSave('jagreeti_dignitaries', rawDignitaryMessages), [rawDignitaryMessages]);
-  useEffect(() => safeSave('jagreeti_committee', rawCommittee), [rawCommittee]);
-  useEffect(() => safeSave('jagreeti_committee_groups', rawCommitteeGroups), [rawCommitteeGroups]);
-  useEffect(() => safeSave('jagreeti_programs', rawPrograms), [rawPrograms]);
-  useEffect(() => safeSave('jagreeti_projects', rawProjects), [rawProjects]);
-  useEffect(() => safeSave('jagreeti_notices', rawNotices), [rawNotices]);
-  useEffect(() => safeSave('jagreeti_gallery', rawGalleryPhotos), [rawGalleryPhotos]);
-  useEffect(() => safeSave('jagreeti_gallery_albums', rawGalleryAlbums), [rawGalleryAlbums]);
-  useEffect(() => safeSave('jagreeti_volunteers', volunteers), [volunteers]);
-  useEffect(() => safeSave('jagreeti_donations', donations), [donations]);
-  useEffect(() => safeSave('jagreeti_donors', donors), [donors]);
+  useEffect(() => {
+    if (!firebaseConfigured) return;
+    return subscribeToCollection<{ id: string } & CustomCategoriesMap>(
+      'categories',
+      (items) => {
+        const registry = items.find((item) => item.id === 'registry');
+        if (registry) {
+          categoriesHydrated.current = true;
+          const { id: _id, ...categories } = registry;
+          setCustomCategories(categories);
+        }
+      }
+    );
+  }, []);
+  useEffect(() => {
+    if (!firebaseConfigured || !categoriesHydrated.current) return;
+    void replaceSingleton('categories', 'registry', customCategories);
+  }, [customCategories]);
+  useEffect(() => {
+    if (!firebaseConfigured) return;
+    return subscribeToCollection<{ id: string } & SiteSettings>('site_settings', (items) => {
+      const globalConfig = items.find((item) => item.id === 'global_config');
+      if (globalConfig) {
+        siteSettingsHydrated.current = true;
+        const { id: _id, ...settings } = globalConfig;
+        setSiteSettings(settings);
+      }
+    });
+  }, []);
+  useEffect(() => {
+    if (!firebaseConfigured || !siteSettingsHydrated.current) return;
+    void replaceSingleton('site_settings', 'global_config', siteSettings);
+  }, [siteSettings]);
   useEffect(() => safeSave('jagreeti_user_goals', userGoals), [userGoals]);
   useEffect(() => safeSave('jagreeti_user_profile', userProfile), [userProfile]);
 
@@ -590,7 +492,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const deleteDignitaryMessage = (id: string) => {
+    const message = rawDignitaryMessages.find((item) => item.id === id);
     setDignitaryMessages((prev) => prev.filter((m) => m.id !== id));
+    void removeStorageFile(message?.storagePath);
   };
 
   const reorderDignitaryMessage = (id: string, direction: 'up' | 'down') => {
@@ -621,7 +525,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const deleteCommitteeMember = (id: string) => {
+    const member = rawCommittee.find((item) => item.id === id);
     setCommittee((prev) => prev.filter((m) => m.id !== id));
+    void removeStorageFile(member?.storagePath);
   };
 
   const reorderCommitteeMember = (id: string, direction: 'up' | 'down') => {
@@ -677,7 +583,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const deleteProgram = (id: string) => {
+    const program = rawPrograms.find((item) => item.id === id);
     setPrograms((prev) => prev.filter((p) => p.id !== id));
+    void removeStorageFile(program?.storagePath);
   };
 
   const reorderProgram = (id: string, direction: 'up' | 'down') => {
@@ -704,7 +612,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const deleteProject = (id: string) => {
+    const project = rawProjects.find((item) => item.id === id);
     setProjects((prev) => prev.filter((p) => p.id !== id));
+    void removeStorageFile(project?.storagePath);
   };
 
   const reorderProject = (id: string, direction: 'up' | 'down') => {
@@ -743,7 +653,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const deleteNotice = (id: string) => {
+    const notice = rawNotices.find((item) => item.id === id);
     setNotices((prev) => prev.filter((n) => n.id !== id));
+    void removeStorageFile(notice?.storagePath);
   };
 
   // Gallery Photos/Videos CRUD + Reorder
@@ -773,7 +685,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const deleteGalleryPhoto = (id: string) => {
+    const photo = rawGalleryPhotos.find((item) => item.id === id);
     setGalleryPhotos((prev) => prev.filter((g) => g.id !== id));
+    void removeStorageFile(photo?.storagePath);
   };
 
   const reorderGalleryPhoto = (id: string, direction: 'up' | 'down') => {
@@ -802,7 +716,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const deleteGalleryAlbum = (id: string) => {
+    const album = rawGalleryAlbums.find((item) => item.id === id);
     setGalleryAlbums((prev) => prev.filter((a) => a.id !== id));
+    void removeStorageFile(album?.storagePath);
     // Unlink photos from deleted album so they remain as standalone singles
     setGalleryPhotos((prev) =>
       prev.map((g) => (g.albumId === id ? { ...g, albumId: '', showAsSingle: true } : g))
@@ -952,19 +868,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.removeItem('jagreeti_volunteers');
     localStorage.removeItem('jagreeti_donations');
     localStorage.removeItem('jagreeti_donors');
-    setCustomCategories(INITIAL_CUSTOM_CATEGORIES);
-    setSiteSettings(INITIAL_SITE_SETTINGS);
-    setDignitaryMessages(INITIAL_DIGNITARY_MESSAGES);
-    setCommittee(INITIAL_COMMITTEE);
-    setCommitteeGroups(INITIAL_COMMITTEE_GROUPS);
-    setPrograms(INITIAL_PROGRAMS);
-    setProjects(INITIAL_PROJECTS);
-    setNotices(INITIAL_NOTICES);
-    setGalleryPhotos(INITIAL_GALLERY);
-    setGalleryAlbums(INITIAL_GALLERY_ALBUMS);
-    setVolunteers(INITIAL_VOLUNTEERS);
-    setDonations(INITIAL_DONATIONS);
-    setDonors(INITIAL_DONORS);
+    setCustomCategories({});
+    setSiteSettings({} as SiteSettings);
+    setDignitaryMessages([]);
+    setCommittee([]);
+    setCommitteeGroups([]);
+    setPrograms([]);
+    setProjects([]);
+    setNotices([]);
+    setGalleryPhotos([]);
+    setGalleryAlbums([]);
+    setVolunteers([]);
+    setDonations([]);
+    setDonors([]);
     showToast(
       language === 'bn'
         ? 'সকল ডেটা ডিফল্ট অবস্থায় রিসেট করা হয়েছে'

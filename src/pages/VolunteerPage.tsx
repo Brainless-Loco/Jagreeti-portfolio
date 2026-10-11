@@ -59,7 +59,7 @@ export const VolunteerPage: React.FC = () => {
         <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white">
           {t.volunteer.title}
         </h1>
-        <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300">
+        <p className="text-3xl sm:text-base  text-cyan-400 dark:text-slate-300">
           {t.volunteer.subtitle}
         </p>
       </div>

@@ -7,6 +7,7 @@ import {
   Globe2,
   Users,
   Phone,
+  ShieldCheck,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
@@ -83,13 +84,18 @@ export const Navbar: React.FC = () => {
           {/* Logo & Brand */}
           <div
             onClick={() => handleNavClick('home')}
-            className="flex items-center gap-3 cursor-pointer select-none group"
+            className="flex items-center gap-5 cursor-pointer select-none group"
           >
             <div
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center text-white shadow-md shadow-[#04345c]/20 group-hover:scale-105 transition duration-200"
+              className="rounded-2xl flex items-center justify-center text-white shadow-md shadow-[#04345c]/20 group-hover:scale-105 transition duration-200"
               style={{ backgroundColor: currentPalette.primary }}
             >
-              <Heart className="w-5 h-5 sm:w-6 sm:h-6 fill-white/20 text-white" />
+              {/* image logo at public/assets/logo.png */}
+              <img
+                src="/assets/logo.png"
+                alt="JAGREETI Logo"
+                className="w-10 h-11 md:scale-150 sm:scale-100 object-contain"
+              />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
@@ -112,7 +118,7 @@ export const Navbar: React.FC = () => {
                 <button
                   key={item.id}
                   onClick={() => handleNavClick(item.id)}
-                  className={`relative px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-150 flex items-center gap-1.5 ${
+                  className={`relative px-2.5 py-2 rounded-xl text-xs font-semibold transition-all duration-150 flex items-center gap-1.5 ${
                     isActive
                       ? 'text-white shadow-sm'
                       : 'text-slate-700 hover:text-[#04345c] hover:bg-slate-100'
