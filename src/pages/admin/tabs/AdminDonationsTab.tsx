@@ -90,9 +90,9 @@ export const AdminDonationsTab: React.FC = () => {
 
   const filteredDonations = donations.filter((d) => {
     const matchesSearch =
-      d.donorName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      d.trxId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      d.cause.toLowerCase().includes(searchQuery.toLowerCase());
+      (d.donorName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (d.trxId || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (d.cause || '').toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'all' || d.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -202,7 +202,7 @@ export const AdminDonationsTab: React.FC = () => {
                     {d.phone && <span className="block text-[10px] text-slate-400 font-normal">{d.phone}</span>}
                   </td>
                   <td className="py-3.5 px-4 font-mono font-black text-slate-900 text-sm">
-                    ৳{d.amount.toLocaleString()}
+                    ৳{Number(d.amount || 0).toLocaleString()}
                   </td>
                   <td className="py-3.5 px-4">
                     <span className="font-semibold text-slate-800">{d.method}</span>

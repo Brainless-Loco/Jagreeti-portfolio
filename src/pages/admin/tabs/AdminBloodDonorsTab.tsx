@@ -41,10 +41,10 @@ export const AdminBloodDonorsTab: React.FC = () => {
     const loc = d.location || d.upazila || d.district || '';
     const matchesSearch =
       !q ||
-      d.name.toLowerCase().includes(q) ||
+      (d.name || '').toLowerCase().includes(q) ||
       (d.nameBn || '').toLowerCase().includes(q) ||
       loc.toLowerCase().includes(q) ||
-      d.phone.includes(q);
+      (d.phone || '').includes(q);
     return matchesGroup && matchesSearch;
   });
 

@@ -46,8 +46,8 @@ export const AdminVolunteersTab: React.FC = () => {
 
   const filteredVolunteers = volunteers.filter((v) => {
     const matchesSearch =
-      v.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      v.phone.includes(searchQuery) ||
+      (v.fullName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (v.phone || '').includes(searchQuery) ||
       (v.institution || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
       (v.district || '').toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'all' || v.status === statusFilter;

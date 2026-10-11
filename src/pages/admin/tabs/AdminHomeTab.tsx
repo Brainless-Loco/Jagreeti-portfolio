@@ -13,6 +13,7 @@ export const AdminHomeTab: React.FC = () => {
     tickerTextBn: siteSettings?.tickerTextBn || '',
     tickerTextEn: siteSettings?.tickerTextEn || '',
     beneficiariesCount: siteSettings?.beneficiariesCount ?? '',
+    bloodBagsArrangedCount: siteSettings?.bloodBagsArrangedCount ?? '',
     volunteersCount: siteSettings?.volunteersCount ?? '',
     treesPlantedCount: siteSettings?.treesPlantedCount ?? '',
     scholarshipStudentsCount: siteSettings?.scholarshipStudentsCount ?? '',
@@ -186,6 +187,20 @@ export const AdminHomeTab: React.FC = () => {
                 type="number"
                 name="beneficiariesCount"
                 value={formData.beneficiariesCount}
+                onChange={handleChange}
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 text-sm font-bold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1e77bd]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                {language === 'bn' ? 'ব্যাগ রক্তের ব্যবস্থা সম্পন্ন' : 'Blood Bags Arranged'}
+              </label>
+              <input
+                type="number"
+                min={0}
+                name="bloodBagsArrangedCount"
+                value={formData.bloodBagsArrangedCount}
                 onChange={handleChange}
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 text-sm font-bold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1e77bd]"
               />

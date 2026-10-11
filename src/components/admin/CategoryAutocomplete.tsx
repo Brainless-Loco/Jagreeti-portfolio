@@ -39,11 +39,12 @@ export const CategoryAutocomplete: React.FC<CategoryAutocompleteProps> = ({
   }, []);
 
   const trimmed = inputText.trim();
-  const filteredOptions = options.filter((opt) =>
-    opt.toLowerCase().includes(trimmed.toLowerCase())
+  const safeOptions = options || [];
+  const filteredOptions = safeOptions.filter((opt) =>
+    (opt || '').toLowerCase().includes(trimmed.toLowerCase())
   );
-  const exactMatch = options.find(
-    (opt) => opt.toLowerCase() === trimmed.toLowerCase()
+  const exactMatch = safeOptions.find(
+    (opt) => (opt || '').toLowerCase() === trimmed.toLowerCase()
   );
 
   const handleSelectOption = (opt: string) => {
@@ -100,7 +101,7 @@ export const CategoryAutocomplete: React.FC<CategoryAutocompleteProps> = ({
       {open && (
         <div className="absolute z-40 left-0 right-0 mt-1 bg-white rounded-xl border border-slate-200 shadow-xl max-h-52 overflow-y-auto py-1 text-xs">
           {filteredOptions.map((opt) => {
-            const isSelected = opt.toLowerCase() === value?.toLowerCase();
+            const isSelected = (opt || '').toLowerCase() === value?.toLowerCase();
             return (
               <button
                 key={opt}

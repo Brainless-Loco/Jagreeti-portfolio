@@ -52,7 +52,7 @@ export const GalleryPage: React.FC = () => {
   // Filtered Albums (sorted by priority in AppContext)
   const filteredAlbums = useMemo(() => {
     return galleryAlbums.filter((alb) => {
-      return selectedCategory === 'all' || alb.category.toLowerCase() === selectedCategory.toLowerCase();
+      return selectedCategory === 'all' || (alb.category || '').toLowerCase() === selectedCategory.toLowerCase();
     });
   }, [galleryAlbums, selectedCategory]);
 
@@ -62,7 +62,7 @@ export const GalleryPage: React.FC = () => {
       if (item.showAsSingle === false) return false;
       const matchesCat =
         selectedCategory === 'all' ||
-        item.category.toLowerCase() === selectedCategory.toLowerCase();
+        (item.category || '').toLowerCase() === selectedCategory.toLowerCase();
       const matchesType =
         mediaTypeFilter === 'all' || (item.mediaType || 'photo') === mediaTypeFilter;
       return matchesCat && matchesType;

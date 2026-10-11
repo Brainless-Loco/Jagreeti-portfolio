@@ -62,9 +62,6 @@ export const HomePage: React.FC = () => {
 
   const urgentNotices = (notices || []).filter((n) => n.isUrgent);
   const availableDonorsCount = (donors || []).filter((d) => d.available ?? d.isAvailable).length;
-  const bloodBagsArranged = donors?.length
-    ? donors.reduce((total, donor) => total + (Number(donor.totalDonations) || 0), 0)
-    : null;
   const formatCount = (value: number | undefined, locale = 'en-US') =>
     value === undefined || value === null ? '' : `${value.toLocaleString(locale)}+`;
 
@@ -78,8 +75,8 @@ export const HomePage: React.FC = () => {
     },
     {
       icon: Droplets,
-      valueEn: bloodBagsArranged === null ? '' : bloodBagsArranged.toLocaleString(),
-      valueBn: bloodBagsArranged === null ? '' : bloodBagsArranged.toLocaleString('bn-BD'),
+      valueEn: formatCount(siteSettings?.bloodBagsArrangedCount),
+      valueBn: formatCount(siteSettings?.bloodBagsArrangedCount, 'bn-BD'),
       labelEn: 'Bags of Blood Arranged',
       labelBn: 'ব্যাগ রক্তের ব্যবস্থা সম্পন্ন',
     },
@@ -375,7 +372,7 @@ export const HomePage: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
           {dignitaryMessages.map((item, idx) => (
             <motion.div
               key={item.id}

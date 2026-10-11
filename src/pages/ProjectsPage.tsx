@@ -30,7 +30,7 @@ export const ProjectsPage: React.FC = () => {
     return projects.filter((p) => {
       const matchStatus = statusFilter === 'all' || p.status === statusFilter;
       const matchCat =
-        categoryFilter === 'all' || p.category.toLowerCase() === categoryFilter.toLowerCase();
+        categoryFilter === 'all' || (p.category || '').toLowerCase() === categoryFilter.toLowerCase();
       return matchStatus && matchCat;
     });
   }, [projects, statusFilter, categoryFilter]);

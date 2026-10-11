@@ -43,10 +43,10 @@ export const ContactPage: React.FC = () => {
         <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
           {language === 'bn' ? 'আমাদের সাথে যোগাযোগ করুন' : 'Connect & Collaborate'}
         </span>
-        <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white">
+        <h1 className="text-3xl sm:text-4xl font-black text-slate-900 ">
           {t.contact.title}
         </h1>
-        <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300">
+        <p className="text-sm sm:text-base text-slate-600">
           {t.contact.subtitle}
         </p>
       </div>
@@ -66,7 +66,7 @@ export const ContactPage: React.FC = () => {
                   <MapPin className="w-4 h-4" />
                 </div>
                 <div>
-                  <strong className="block text-slate-900 dark:text-white font-semibold">
+                  <strong className="block text-slate- font-semibold">
                     {t.contact.headOffice}
                   </strong>
                   <span>
@@ -107,7 +107,7 @@ export const ContactPage: React.FC = () => {
                     href={siteSettings?.contactEmail ? `mailto:${siteSettings.contactEmail}` : undefined}
                     className="hover:underline"
                   >
-                    {siteSettings?.contactEmail || ''}
+                    {siteSettings?.contactEmail || 'jagreeti1968ctg@gmail.com'}
                   </a>
                   <div className="text-[11px] text-slate-400">Official inquiries & partnerships</div>
                 </div>
@@ -121,7 +121,7 @@ export const ContactPage: React.FC = () => {
                   <strong className="block text-slate-900 dark:text-white font-semibold">
                     {language === 'bn' ? 'কার্যনির্বাহী সময়' : 'Office Hours'}
                   </strong>
-                  <span>Sat - Thu: 9:00 AM - 8:00 PM</span>
+                  <span>Sunday - Thursday: 9:00 AM - 8:00 PM</span>
                   <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
                     (Blood Emergency SOS 24/7 Open)
                   </div>
@@ -210,7 +210,7 @@ export const ContactPage: React.FC = () => {
                     placeholder="e.g. Asif Mahmud"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-100"
                   />
                 </div>
 
@@ -224,7 +224,7 @@ export const ContactPage: React.FC = () => {
                     placeholder="name@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-100"
                   />
                 </div>
 
@@ -234,10 +234,10 @@ export const ContactPage: React.FC = () => {
                   </label>
                   <input
                     type="tel"
-                    placeholder="01744-XXXXXX"
+                    placeholder="01XXX-XXXXXX"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-100"
                   />
                 </div>
 
@@ -250,7 +250,7 @@ export const ContactPage: React.FC = () => {
                     placeholder="e.g. Educational Scholarship or Partnership"
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-100"
                   />
                 </div>
               </div>
@@ -269,7 +269,7 @@ export const ContactPage: React.FC = () => {
                   }
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-100"
                 />
               </div>
 

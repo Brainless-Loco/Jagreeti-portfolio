@@ -223,6 +223,8 @@ export interface CustomCategoriesMap {
   notices: string[];
   noticeCategories: string[];
   committeeTags: string[];
+  committeeRoles: string[];
+  dignitaryRoles: string[];
   donations: string[];
   donationCauses: string[];
 }
@@ -235,6 +237,7 @@ export interface SiteSettings {
   tickerTextEn: string;
   tickerTextBn: string;
   beneficiariesCount: number;
+  bloodBagsArrangedCount: number;
   volunteersCount: number;
   treesPlantedCount: number;
   scholarshipStudentsCount: number;

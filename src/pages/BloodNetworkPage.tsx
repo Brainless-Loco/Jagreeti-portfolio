@@ -36,14 +36,15 @@ export const BloodNetworkPage: React.FC = () => {
   // Filter Donors
   const filteredDonors = donors.filter((d) => {
     const matchGroup = searchGroup === 'All' || d.bloodGroup === searchGroup;
-    const matchDistrict = searchDistrict === 'All' || d.district.toLowerCase() === searchDistrict.toLowerCase();
+    const matchDistrict =
+      searchDistrict === 'All' || (d.district || '').toLowerCase() === searchDistrict.toLowerCase();
     const matchAvailable = !availableOnly || d.available;
     const matchKeyword =
       !searchKeyword ||
-      d.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+      (d.name || '').toLowerCase().includes(searchKeyword.toLowerCase()) ||
       (d.nameBn && d.nameBn.includes(searchKeyword)) ||
-      d.upazila.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-      d.phone.includes(searchKeyword);
+      (d.upazila || '').toLowerCase().includes(searchKeyword.toLowerCase()) ||
+      (d.phone || '').includes(searchKeyword);
 
     return matchGroup && matchDistrict && matchAvailable && matchKeyword;
   });
@@ -274,7 +275,7 @@ export const BloodNetworkPage: React.FC = () => {
                 </a>
                 {donor.whatsapp && (
                   <a
-                    href={`https://wa.me/${donor.whatsapp.replace(/[^0-9]/g, '')}`}
+                    href={`https://wa.me/${(donor.whatsapp || '').replace(/[^0-9]/g, '')}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-emerald-100 text-emerald-600 dark:text-emerald-400 transition"

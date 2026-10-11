@@ -25,7 +25,7 @@ export const NoticesPage: React.FC = () => {
   }, [notices]);
 
   const filteredNotices = notices.filter(
-    (n) => selectedCategory === 'all' || n.category.toLowerCase() === selectedCategory.toLowerCase()
+    (n) => selectedCategory === 'all' || (n.category || '').toLowerCase() === selectedCategory.toLowerCase()
   );
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export const NoticesPage: React.FC = () => {
   };
 
   const getCategoryBadge = (cat: string) => {
-    switch (cat.toLowerCase()) {
+    switch ((cat || '').toLowerCase()) {
       case 'circular':
         return {
           en: 'Official Circular',

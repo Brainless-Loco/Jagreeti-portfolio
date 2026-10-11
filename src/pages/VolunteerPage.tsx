@@ -53,13 +53,13 @@ export const VolunteerPage: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto space-y-3">
-        <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+        <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
           {language === 'bn' ? 'তারুণ্যের সমাজসেবা প্ল্যাটফর্ম' : 'Youth Leadership Movement'}
         </span>
-        <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white">
+        <h1 className="text-3xl sm:text-4xl font-black text-slate-900 ">
           {t.volunteer.title}
         </h1>
-        <p className="text-3xl sm:text-base  text-cyan-400 dark:text-slate-300">
+        <p className="text-3xl sm:text-base  text-cyan-400">
           {t.volunteer.subtitle}
         </p>
       </div>
@@ -69,10 +69,10 @@ export const VolunteerPage: React.FC = () => {
         {t.volunteer.perks.map((perk, i) => (
           <div
             key={i}
-            className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3"
+            className="p-5 rounded-3xl bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3"
           >
             <div
-              className="w-10 h-10 rounded-2xl flex items-center justify-center text-white"
+              className="w-10 h-10 rounded-2xl flex items-center justify-center text-slate-50"
               style={{ backgroundColor: currentPalette.primary }}
             >
               {i === 0 ? (
@@ -85,7 +85,7 @@ export const VolunteerPage: React.FC = () => {
                 <Heart className="w-5 h-5" />
               )}
             </div>
-            <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-200 font-medium leading-relaxed">
               {perk}
             </p>
           </div>
@@ -129,7 +129,7 @@ export const VolunteerPage: React.FC = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">
                     {t.bloodNetwork.fullName} *
                   </label>
                   <input
@@ -138,12 +138,12 @@ export const VolunteerPage: React.FC = () => {
                     placeholder={language === 'bn' ? 'যেমন: তানভীর আহমেদ' : 'e.g. Tanvir Ahmed'}
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-100"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">
                     {t.common.email} *
                   </label>
                   <input
@@ -152,7 +152,7 @@ export const VolunteerPage: React.FC = () => {
                     placeholder="name@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-100"
                   />
                 </div>
 
@@ -163,21 +163,21 @@ export const VolunteerPage: React.FC = () => {
                   <input
                     type="tel"
                     required
-                    placeholder="01744-XXXXXX"
+                    placeholder="01XXX-XXXXXX"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-100"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">
                     {language === 'bn' ? 'আগ্রহের ক্ষেত্র / উইং' : 'Preferred Volunteering Wing'}
                   </label>
                   <select
                     value={bloodGroup}
                     onChange={(e) => setBloodGroup(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 text-sm font-semibold text-[#04345c] focus:outline-none focus:ring-2 focus:ring-[#1e77bd]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-800 text-sm font-semibold text-[#04345c] focus:outline-none focus:ring-2 focus:ring-[#1e77bd] text-slate-100"
                   >
                     {[
                       { id: 'education', bn: 'শিক্ষা ও মেধাবৃত্তি সহায়তা', en: 'Education & Scholarships' },
@@ -194,34 +194,35 @@ export const VolunteerPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">
                     {t.volunteer.institution}
                   </label>
                   <input
                     type="text"
-                    placeholder={language === 'bn' ? 'যেমন: ঢাকা বিশ্ববিদ্যালয় / কর্মস্থল' : 'College / Workplace'}
+                    placeholder={language === 'bn' ? 'যেমন: চট্টগ্রাম বিশ্ববিদ্যালয় / কর্মস্থল' : 'College / Workplace'}
                     value={institution}
                     onChange={(e) => setInstitution(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e77bd]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e77bd] text-slate-100"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">
                     {language === 'bn' ? 'নিজ জেলা' : 'District'} *
                   </label>
                   <input
                     type="text"
                     required
                     value={district}
+                    placeholder={language === 'bn' ? 'যেমন: চট্টগ্রাম ' : 'e.g. Chittagong'}
                     onChange={(e) => setDistrict(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e77bd]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e77bd] text-slate-100"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
                   {t.volunteer.skills}
                 </label>
                 <input
@@ -233,7 +234,7 @@ export const VolunteerPage: React.FC = () => {
                   }
                   value={skills}
                   onChange={(e) => setSkills(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e77bd]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e77bd] text-slate-100"
                 />
               </div>
 
@@ -250,7 +251,7 @@ export const VolunteerPage: React.FC = () => {
                       ? 'আপনার সমাজসেবামূলক আগ্রহ সম্পর্কে সংক্ষেপে লিখুন...'
                       : 'A brief note about your passion for community welfare...'
                   }
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-100"
                 />
               </div>
 
@@ -290,7 +291,7 @@ export const VolunteerPage: React.FC = () => {
                 <div>
                   <div className="text-xs text-slate-400">Name</div>
                   <div className="text-base font-bold text-white">
-                    {fullName || 'Tanvir Ahmed Tonmoy'}
+                    {fullName || 'You Name Here...'}
                   </div>
                 </div>
                 <div className="px-2.5 py-1 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-black">
@@ -301,7 +302,7 @@ export const VolunteerPage: React.FC = () => {
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div>
                   <span className="text-slate-400 text-[10px] block">District</span>
-                  <span className="font-semibold">{district || 'Lalmonirhat'}</span>
+                  <span className="font-semibold">{district || 'Chattogram'}</span>
                 </div>
                 <div>
                   <span className="text-slate-400 text-[10px] block">Role</span>
@@ -312,8 +313,8 @@ export const VolunteerPage: React.FC = () => {
 
             <div className="pt-4 border-t border-slate-800 flex items-center justify-between text-[11px]">
               <div className="space-y-0.5">
-                <div className="text-[10px] text-slate-500">PBTS BD Ideology</div>
-                <div className="font-mono text-slate-300">ID: JGT-2026-8942</div>
+                <div className="text-[10px] text-slate-500">Jagreeti BD Ideology</div>
+                {/* <div className="font-mono text-slate-300">ID: JGT-2026-8942</div> */}
               </div>
               <QrCode className="w-10 h-10 text-white/80" />
             </div>

@@ -33,13 +33,15 @@ export const TagInputAutocomplete: React.FC<TagInputAutocompleteProps> = ({
   }, []);
 
   const trimmed = inputVal.trim();
+  const safeTags = tags || [];
+  const safeAvailableTags = availableTags || [];
 
   const handleAddTag = (tagToAdd: string) => {
     const clean = tagToAdd.trim();
     if (!clean) return;
-    const alreadyInMember = tags.some((t) => t.toLowerCase() === clean.toLowerCase());
+    const alreadyInMember = safeTags.some((t) => t.toLowerCase() === clean.toLowerCase());
     if (!alreadyInMember) {
-      onChange([...tags, clean]);
+      onChange([...safeTags, clean]);
     }
     if (onRegisterNewTag) {
       onRegisterNewTag(clean);
@@ -49,16 +51,16 @@ export const TagInputAutocomplete: React.FC<TagInputAutocompleteProps> = ({
   };
 
   const handleRemoveTag = (tagToRemove: string) => {
-    onChange(tags.filter((t) => t !== tagToRemove));
+    onChange(safeTags.filter((t) => t !== tagToRemove));
   };
 
-  const suggestions = availableTags.filter(
+  const suggestions = safeAvailableTags.filter(
     (t) =>
-      !tags.some((selected) => selected.toLowerCase() === t.toLowerCase()) &&
+      !safeTags.some((selected) => selected.toLowerCase() === t.toLowerCase()) &&
       t.toLowerCase().includes(trimmed.toLowerCase())
   );
 
-  const exactExistsInSuggestions = availableTags.some(
+  const exactExistsInSuggestions = safeAvailableTags.some(
     (t) => t.toLowerCase() === trimmed.toLowerCase()
   );
 
@@ -70,7 +72,7 @@ export const TagInputAutocomplete: React.FC<TagInputAutocompleteProps> = ({
       </label>
 
       <div className="p-2 rounded-xl border border-slate-300 bg-slate-50 focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1e77bd] flex flex-wrap items-center gap-1.5">
-        {tags.map((tag) => (
+        {safeTags.map((tag) => (
           <span
             key={tag}
             className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#04345c] text-white text-[11px] font-semibold"

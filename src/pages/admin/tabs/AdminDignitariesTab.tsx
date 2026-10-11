@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '../../../context/AppContext';
 import { DignitaryMessage } from '../../../types';
+import { CategoryAutocomplete } from '../../../components/admin/CategoryAutocomplete';
 import { MediaUploadField } from '../../../components/admin/MediaUploadField';
 
 export const AdminDignitariesTab: React.FC = () => {
@@ -22,6 +23,8 @@ export const AdminDignitariesTab: React.FC = () => {
     updateDignitaryMessage,
     deleteDignitaryMessage,
     reorderDignitaryMessage,
+    customCategories,
+    addCustomCategory,
     showToast,
   } = useApp();
 
@@ -46,6 +49,18 @@ export const AdminDignitariesTab: React.FC = () => {
     fullMessage: '',
     fullMessageBn: '',
   });
+
+  const dignitaryRoleOptions = Array.from(
+    new Set([
+      'chief_advisor',
+      'founder',
+      'president',
+      'secretary',
+      'patron',
+      ...(customCategories.dignitaryRoles || []),
+      ...dignitaryMessages.map((message) => message.type).filter(Boolean),
+    ])
+  );
 
   const handleOpenCreate = () => {
     setFormData({
@@ -123,6 +138,7 @@ export const AdminDignitariesTab: React.FC = () => {
       );
       setIsCreating(false);
     }
+    if (formData.type) addCustomCategory('dignitaryRoles', formData.type);
   };
 
   const handleDelete = (id: string, name: string) => {
@@ -295,22 +311,15 @@ export const AdminDignitariesTab: React.FC = () => {
             <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-4 text-xs">
               {/* Row 1: Role Type & Priority Order */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">
-                    {language === 'bn' ? 'পদবী ধরন (Role Key)' : 'Role Type'}
-                  </label>
-                  <select
-                    value={formData.type}
-                    onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-semibold focus:bg-white focus:ring-2 focus:ring-[#1e77bd]"
-                  >
-                    <option value="chief_advisor">Chief Advisor (প্রধান উপদেষ্টা)</option>
-                    <option value="founder">Founder (প্রতিষ্ঠাতা)</option>
-                    <option value="president">President (সভাপতি)</option>
-                    <option value="secretary">General Secretary (সাধারণ সম্পাদক)</option>
-                    <option value="patron">Special Patron (বিশেষ পৃষ্ঠপোষক)</option>
-                  </select>
-                </div>
+                <CategoryAutocomplete
+                  label={language === 'bn' ? 'পদবী ধরন (Role Key)' : 'Role Type'}
+                  value={formData.type || ''}
+                  onChange={(value) => setFormData({ ...formData, type: value })}
+                  options={dignitaryRoleOptions}
+                  onAddOption={(value) => addCustomCategory('dignitaryRoles', value)}
+                  placeholder={language === 'bn' ? 'Role Key নির্বাচন বা নতুন লিখুন...' : 'Select or type a role key...'}
+                  language={language}
+                />
 
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">

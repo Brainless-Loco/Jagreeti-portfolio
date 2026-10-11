@@ -40,13 +40,14 @@ export const CommitteePage: React.FC = () => {
       const matchesTag = selectedTag === 'all' || memberTags.includes(selectedTag);
       const matchesGroup =
         selectedGroupFilter === 'all' || member.groupId === selectedGroupFilter;
+      const search = searchQuery.toLowerCase();
       const matchesSearch =
         !searchQuery.trim() ||
-        member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        member.nameBn.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        member.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        member.roleBn.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        memberTags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
+        (member.name || '').toLowerCase().includes(search) ||
+        (member.nameBn || '').toLowerCase().includes(search) ||
+        (member.role || '').toLowerCase().includes(search) ||
+        (member.roleBn || '').toLowerCase().includes(search) ||
+        memberTags.some((t) => (t || '').toLowerCase().includes(search));
 
       return matchesTag && matchesGroup && matchesSearch;
     });
@@ -117,7 +118,7 @@ export const CommitteePage: React.FC = () => {
             )}
 
             <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-              {member.bio[language]}
+              {member.bio?.[language] || ''}
             </p>
           </div>
         </div>
@@ -439,7 +440,7 @@ export const CommitteePage: React.FC = () => {
                 {language === 'bn' ? 'সংক্ষিপ্ত পরিচিতি ও দায়িত্ব' : 'Biography & Responsibilities'}
               </h4>
               <p className="text-sm text-slate-700 leading-relaxed">
-                {selectedMember.bio[language]}
+                    {selectedMember.bio?.[language] || ''}
               </p>
             </div>
 

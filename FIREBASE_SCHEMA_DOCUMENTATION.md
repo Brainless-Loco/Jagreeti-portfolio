@@ -92,6 +92,7 @@ Stores global homepage hero copy, live impact counters, ticker text, organizatio
   "tickerTextEn": "JAGREETI — Apolitical Socio-Humanitarian Youth Movement | Bangladesh",
   "tickerTextBn": "জাগ্রীতি — অরাজনৈতিক সমাজকল্যাণমূলক যুব সংগঠন | হাটহাজারী",
   "beneficiariesCount": 28500,
+  "bloodBagsArrangedCount": 0,
   "volunteersCount": 450,
   "treesPlantedCount": 18200,
   "scholarshipStudentsCount": 230,

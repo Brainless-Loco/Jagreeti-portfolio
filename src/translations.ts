@@ -203,6 +203,12 @@ export const translations = {
       messageSubject: 'Subject / Area of Inquiry',
       messageBody: 'Your Message',
       sendBtn: 'Send Message',
+      nameLabel: "Your Full Name",
+      emailLabel: 'Your Email Address',
+      phoneLabel: 'Your Phone Number',
+      messageLabel: 'Your Message',
+      subjectLabel: 'Subject / Area of Inquiry',
+      
     },
     firebase: {
       title: 'Firebase Service & Cloud Architecture',
@@ -459,6 +465,11 @@ export const translations = {
       messageSubject: 'বার্তার বিষয়',
       messageBody: 'আপনার বার্তা লিখুন',
       sendBtn: 'বার্তা প্রেরণ করুন',
+      nameLabel: 'আপনার পূর্ণ নাম',
+      emailLabel: 'আপনার ইমেইল',
+      phoneLabel: 'আপনার ফোন নম্বর',
+      messageLabel: 'আপনার বার্তা',
+      subjectLabel: 'বার্তার বিষয়',
     },
     firebase: {
       title: 'ফায়ারবেস সার্ভিস ও ক্লাউড আর্কিটেকচার',

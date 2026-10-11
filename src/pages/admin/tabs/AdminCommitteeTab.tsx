@@ -16,6 +16,7 @@ import {
 import { useApp } from '../../../context/AppContext';
 import { CommitteeMember, CommitteeGroup } from '../../../types';
 import { MediaUploadField } from '../../../components/admin/MediaUploadField';
+import { CategoryAutocomplete } from '../../../components/admin/CategoryAutocomplete';
 import { TagInputAutocomplete } from '../../../components/admin/TagInputAutocomplete';
 
 export const AdminCommitteeTab: React.FC = () => {
@@ -162,6 +163,8 @@ export const AdminCommitteeTab: React.FC = () => {
       );
       setIsCreating(false);
     }
+    if (formData.role) addCustomCategory('committeeRoles', formData.role);
+    if (formData.roleBn) addCustomCategory('committeeRoles', formData.roleBn);
   };
 
   const handleDelete = (id: string, name: string) => {
@@ -243,6 +246,12 @@ export const AdminCommitteeTab: React.FC = () => {
       ...committee.flatMap((m) => m.tags || []),
     ])
   );
+  const allMemberRoles = Array.from(
+    new Set([
+      ...(customCategories.committeeRoles || []),
+      ...committee.flatMap((member) => [member.role, member.roleBn].filter(Boolean)),
+    ])
+  );
 
   const filteredMembers = committee.filter((m) => {
     const matchesSearch =
@@ -250,7 +259,7 @@ export const AdminCommitteeTab: React.FC = () => {
       (m.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
       (m.roleBn || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
       (m.role || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (m.tags || []).some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
+      (m.tags || []).some((t) => (t || '').toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesTag =
       filterTag === 'all' ||
       (m.tags || []).some((t) => t.toLowerCase() === filterTag.toLowerCase()) ||
@@ -697,31 +706,25 @@ export const AdminCommitteeTab: React.FC = () => {
 
               {/* Row 4: Designations / Roles */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">
-                    {language === 'bn' ? 'পদবী (বাংলা) *' : 'Role / Designation (Bangla) *'}
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.roleBn}
-                    onChange={(e) => setFormData({ ...formData, roleBn: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-[#1e77bd]"
-                  />
-                </div>
+                <CategoryAutocomplete
+                  label={language === 'bn' ? 'পদবী (বাংলা) *' : 'Role / Designation (Bangla) *'}
+                  value={formData.roleBn}
+                  onChange={(value) => setFormData({ ...formData, roleBn: value })}
+                  options={allMemberRoles}
+                  onAddOption={(value) => addCustomCategory('committeeRoles', value)}
+                  placeholder={language === 'bn' ? 'পদবী নির্বাচন বা নতুন লিখুন...' : 'Select or type Bangla role...'}
+                  language={language}
+                />
 
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">
-                    {language === 'bn' ? 'পদবী (English) *' : 'Role / Designation (English) *'}
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.role}
-                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-[#1e77bd]"
-                  />
-                </div>
+                <CategoryAutocomplete
+                  label={language === 'bn' ? 'পদবী (English) *' : 'Role / Designation (English) *'}
+                  value={formData.role}
+                  onChange={(value) => setFormData({ ...formData, role: value })}
+                  options={allMemberRoles}
+                  onAddOption={(value) => addCustomCategory('committeeRoles', value)}
+                  placeholder={language === 'bn' ? 'পদবী নির্বাচন বা নতুন লিখুন...' : 'Select or type English role...'}
+                  language={language}
+                />
               </div>
 
               {/* Dual Photo Upload (Firebase Storage) or Direct URL */}
