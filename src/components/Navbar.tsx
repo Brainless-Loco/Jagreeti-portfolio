@@ -49,31 +49,39 @@ export const Navbar: React.FC = () => {
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1.5 text-[#bad3e4] font-medium">
               <span className="w-2 h-2 rounded-full bg-[#1e77bd] animate-ping inline-block" />
-              {language === 'bn' ? 'স্বেচ্ছাসেবা ও মানবিক সহায়তা কেন্দ্র' : 'Voluntary Humanitarian Relief Center'}
+              {language === 'bn'
+                ? `রেজিঃ চি-৩৯৭/৭৩ইং | স্থাপিতঃ ৬ সেপ্টেম্বর'১৯৬৮ইং`
+                : `Reg. No. Chi-397/73 | Established: 6 September 1968`}
             </span>
             <span className="text-white/20">|</span>
             <span className="text-slate-300">
-              {language === 'bn'
-                ? 'জাগ্রীতি — অরাজনৈতিক সমাজকল্যাণমূলক যুব সংগঠন | হাটহাজারী, চট্টগ্রাম, বাংলাদেশ'
-                : 'JAGREETI — Apolitical Socio-Humanitarian Youth Movement | Bangladesh'}
+              
+                {language === 'bn' ? 'সামাজিক, সাংস্কৃতিক ও ক্রীড়া প্রতিষ্ঠান' : 'Social, Cultural and Sports Organizations'}
             </span>
           </div>
 
           <div className="flex items-center gap-4">
             <a
-              href="tel:01744769331"
+              href="tel:01819620432"
               className="flex items-center gap-1.5 text-white/90 hover:text-white transition font-mono font-semibold"
             >
               <Phone className="w-3 h-3 text-[#1e77bd]" />
-              <span>+880 1744-769331</span>
+              <span>+880-1819-620432</span>
             </a>
             <span className="text-white/30">•</span>
-            <button
+             <a
+              href="tel:011972200198"
+              className="flex items-center gap-1.5 text-white/90 hover:text-white transition font-mono font-semibold"
+            >
+              <Phone className="w-3 h-3 text-[#1e77bd]" />
+              <span>+880-1972-200198</span>
+            </a>
+            {/* <button
               onClick={() => handleNavClick('donate')}
               className="text-[#bad3e4] hover:text-white transition font-bold text-xs"
             >
               {language === 'bn' ? 'অনলাইন অনুদান' : 'Online Donation'}
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
