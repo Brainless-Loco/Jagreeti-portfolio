@@ -221,7 +221,7 @@ export const HomePage: React.FC = () => {
 
               {/* Trust Badges */}
               <div className="pt-4 grid grid-cols-3 gap-4 border-t border-slate-200/70 max-w-lg">
-                <div className="flex items-center gap-2 text-xs text-slate-600">
+                {/* <div className="flex items-center gap-2 text-xs text-slate-600">
                   <CheckCircle2
                     className="w-4 h-4 shrink-0"
                     style={{ color: currentPalette.primary }}
@@ -249,7 +249,7 @@ export const HomePage: React.FC = () => {
                   <span>
                     {language === 'bn' ? '২৪/৭ জরুরি সাড়া' : '24/7 Emergency Response'}
                   </span>
-                </div>
+                </div> */}
               </div>
             </motion.div>
 
@@ -297,7 +297,7 @@ export const HomePage: React.FC = () => {
                   </div>
                   <div className="text-lg font-extrabold text-slate-900">
                     {language === 'bn'
-                      ? formatCount(siteSettings?.volunteersCount, 'bn-BD') + ' তরুণ সদস্য'
+                      ? formatCount(siteSettings?.volunteersCount, 'bn-BD') + ' সদস্য'
                       : formatCount(siteSettings?.volunteersCount) + ' Youths'}
                   </div>
                 </div>

@@ -98,10 +98,10 @@ export const DonationPage: React.FC = () => {
         <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
           {language === 'bn' ? 'স্বচ্ছ ও জবাবদিহিতামূলক অনুদান' : 'Transparent & Audited Giving'}
         </span>
-        <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white">
+        <h1 className="text-3xl sm:text-4xl font-black text-slate-900">
           {t.donate.title}
         </h1>
-        <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300">
+        <p className="text-sm sm:text-base text-slate-600">
           {t.donate.subtitle}
         </p>
       </div>
