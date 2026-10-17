@@ -254,18 +254,18 @@ export const HomePage: React.FC = () => {
             </motion.div>
 
             {/* Right Parallax Visual */}
-            <div className="lg:col-span-5 relative">
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white aspect-4/5 sm:aspect-4/3 lg:aspect-4/5">
+            <div className="lg:col-span-5 relative pb-5">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white ">
                 <motion.img
-                  style={{ y: heroImageY, scale: 1.08 }}
-                  src="https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=1000&q=80"
+                  style={{ y: heroImageY, scale: 1.01, }}
+                  src="https://i.postimg.cc/k5WKFdgY/hero-section.jpg"
                   alt="JAGREETI Volunteers in Action"
-                  className="w-full h-full object-cover will-change-transform"
+                  className="w-full h-auto object-contain will-change-transform"
                   referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent" />
 
-                <div className="absolute bottom-6 left-6 right-6 text-white space-y-2">
+                {/* <div className="absolute bottom-6 left-6 right-6 text-white space-y-2">
                   <span
                     className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-white"
                     style={{ backgroundColor: currentPalette.primary }}
@@ -277,13 +277,13 @@ export const HomePage: React.FC = () => {
                       ? 'বানভাসি ও দুর্গত মানুষের দুয়ারে জাগৃতির স্বেচ্ছাসেবক দল'
                       : 'JAGREETI Volunteers Delivering Emergency Aid to Remote Families'}
                   </h3>
-                </div>
+                </div> */}
               </div>
 
               {/* Parallax Floating Card */}
               <motion.div
                 style={{ y: heroFloatingBadgeY }}
-                className="hidden sm:flex absolute bottom-55 -left-6 bg-white p-4 rounded-2xl shadow-xl border border-slate-200/80 items-center gap-3.5 will-change-transform"
+                className="hidden sm:flex absolute bottom-1 -left-30 bg-white p-4 rounded-2xl shadow-xl border border-slate-200/80 items-center gap-3.5 will-change-transform"
               >
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center text-white shrink-0"
@@ -293,7 +293,7 @@ export const HomePage: React.FC = () => {
                 </div>
                 <div>
                   <div className="text-xs text-slate-500 font-medium">
-                    {language === 'bn' ? 'নিবন্ধিত স্বেচ্ছাসেবক' : 'Registered Volunteers'}
+                    {language === 'bn' ? 'নিবন্ধিত' : 'Registered Volunteers'}
                   </div>
                   <div className="text-lg font-extrabold text-slate-900">
                     {language === 'bn'
