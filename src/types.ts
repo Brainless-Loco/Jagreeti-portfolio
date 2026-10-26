@@ -159,6 +159,8 @@ export interface GalleryPhoto {
   titleBn: string;
   caption?: string;
   captionBn?: string;
+  subtitle?: string;
+  subtitleBn?: string;
   category: string;
   categoryBn?: string;
   mediaType?: 'photo' | 'video';
@@ -238,6 +240,7 @@ export interface SiteSettings {
   heroSubheadlineBn: string;
   tickerTextEn: string;
   tickerTextBn: string;
+  heroCarouselIntervalSeconds?: number;
   beneficiariesCount: number;
   bloodBagsArrangedCount: number;
   volunteersCount: number;

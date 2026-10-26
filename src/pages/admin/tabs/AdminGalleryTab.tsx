@@ -53,6 +53,8 @@ export const AdminGalleryTab: React.FC = () => {
   const [mediaForm, setMediaForm] = useState<{
     title: string;
     titleBn: string;
+    subtitle: string;
+    subtitleBn: string;
     category: string;
     categoryBn: string;
     date: string;
@@ -67,6 +69,8 @@ export const AdminGalleryTab: React.FC = () => {
   }>({
     title: '',
     titleBn: '',
+    subtitle: '',
+    subtitleBn: '',
     category: 'Medical',
     categoryBn: 'চিকিৎসা সেবা',
     date: new Date().getFullYear().toString(),
@@ -112,6 +116,8 @@ export const AdminGalleryTab: React.FC = () => {
     setMediaForm({
       title: '',
       titleBn: '',
+      subtitle: '',
+      subtitleBn: '',
       category: 'Medical',
       categoryBn: 'চিকিৎসা সেবা',
       date: new Date().getFullYear().toString(),
@@ -136,6 +142,8 @@ export const AdminGalleryTab: React.FC = () => {
     setMediaForm({
       title: item.title,
       titleBn: item.titleBn,
+      subtitle: item.subtitle || item.caption || '',
+      subtitleBn: item.subtitleBn || item.captionBn || '',
       category: item.category,
       categoryBn: item.categoryBn || item.category,
       date: item.date || '2025',
@@ -177,6 +185,8 @@ export const AdminGalleryTab: React.FC = () => {
     const payload: Omit<GalleryPhoto, 'id'> = {
       title: mediaForm.title || mediaForm.titleBn,
       titleBn: mediaForm.titleBn || mediaForm.title,
+      subtitle: mediaForm.subtitle || undefined,
+      subtitleBn: mediaForm.subtitleBn || undefined,
       category: mediaForm.category || 'Events',
       categoryBn: mediaForm.categoryBn || mediaForm.category || 'ইভেন্ট',
       date: mediaForm.date || '2025',
@@ -828,6 +838,31 @@ export const AdminGalleryTab: React.FC = () => {
                     placeholder="যেমন: ফ্রি মেডিকেল ক্যাম্প ২০২৫"
                     className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-[#1e77bd]"
                   />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">
+                      {language === 'bn' ? 'সাবটাইটেল (বাংলা, ঐচ্ছিক)' : 'Subtitle (Bengali, optional)'}
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={mediaForm.subtitleBn}
+                      onChange={(e) => setMediaForm({ ...mediaForm, subtitleBn: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-[#1e77bd]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">
+                      {language === 'bn' ? 'সাবটাইটেল (English, ঐচ্ছিক)' : 'Subtitle (English, optional)'}
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={mediaForm.subtitle}
+                      onChange={(e) => setMediaForm({ ...mediaForm, subtitle: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-[#1e77bd]"
+                    />
+                  </div>
                 </div>
 
                 <div>

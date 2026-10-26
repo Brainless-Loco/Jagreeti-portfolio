@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Heart,
   Droplets,
@@ -40,6 +40,7 @@ export const HomePage: React.FC = () => {
   } = useApp();
 
   const [selectedMessage, setSelectedMessage] = useState<DignitaryMessage | null>(null);
+  const [activeCarouselIndex, setActiveCarouselIndex] = useState(0);
 
   // Lightweight scroll-driven parallax references
   const heroRef = useRef<HTMLElement | null>(null);
@@ -98,6 +99,22 @@ export const HomePage: React.FC = () => {
 
   // Featured video or gallery media for Home preview
   const featuredVideosAndPhotos = galleryPhotos.slice(0, 3);
+  const carouselPhotos = galleryPhotos.filter((photo) => photo.mediaType !== 'video' && photo.image);
+  const carouselIntervalSeconds = Math.max(1, Math.min(60, siteSettings?.heroCarouselIntervalSeconds ?? 3));
+
+  useEffect(() => {
+    if (activeCarouselIndex >= carouselPhotos.length) {
+      setActiveCarouselIndex(0);
+    }
+  }, [activeCarouselIndex, carouselPhotos.length]);
+
+  useEffect(() => {
+    if (carouselPhotos.length < 2) return undefined;
+    const timer = window.setInterval(() => {
+      setActiveCarouselIndex((current) => (current + 1) % carouselPhotos.length);
+    }, carouselIntervalSeconds * 1000);
+    return () => window.clearInterval(timer);
+  }, [carouselPhotos.length, carouselIntervalSeconds]);
 
   return (
     <div className="space-y-20 pb-16 overflow-x-hidden">
@@ -126,8 +143,69 @@ export const HomePage: React.FC = () => {
         </div>
       )}
 
+      {/* HOME PHOTO CAROUSEL */}
+      {carouselPhotos.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-1 mb-5">
+          <div className="relative overflow-hidden rounded-[2rem] bg-slate-950 shadow-2xl border-4 border-white">
+            <div className="relative h-[360px] sm:h-[500px] lg:h-[600px]">
+              {carouselPhotos.map((photo, index) => {
+                const title = language === 'bn' ? photo.titleBn || photo.title : photo.title;
+                const subtitle =
+                  language === 'bn'
+                    ? photo.subtitleBn || photo.subtitle
+                    : photo.subtitle || photo.subtitleBn;
+                const isActive = index === activeCarouselIndex;
+                return (
+                  <div
+                    key={photo.id}
+                    className={`absolute inset-0 transition-opacity duration-700 ${isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                    aria-hidden={!isActive}
+                  >
+                    <img
+                      src={photo.image}
+                      alt={title || 'JAGREETI'}
+                      className="h-full w-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
+                    {(title || subtitle) && (
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/95 via-slate-950/75 to-transparent px-5 pb-2 pt-28 sm:px-10 sm:pb-32 sm:pt-36">
+                        <div className="max-w-3xl text-white">
+                          {title && <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold leading-tight drop-shadow-lg">{title}</h2>}
+                          {subtitle && <p className="mt-3 text-base sm:text-xl lg:text-2xl font-medium leading-relaxed text-white/95 drop-shadow-lg">{subtitle}</p>}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+
+              <div className="absolute inset-x-0 bottom-4 z-10 flex justify-center px-4">
+                <div className="flex max-w-full items-end gap-2 overflow-x-auto rounded-2xl bg-slate-950/45 p-2 backdrop-blur-md">
+                  {carouselPhotos.map((photo, index) => (
+                    <button
+                      key={photo.id}
+                      type="button"
+                      onClick={() => setActiveCarouselIndex(index)}
+                      aria-label={`View slide ${index + 1}`}
+                      aria-current={index === activeCarouselIndex}
+                      className={`shrink-0 overflow-hidden rounded-lg border-2 transition-all duration-300 ${
+                        index === activeCarouselIndex
+                          ? 'h-12 w-18 sm:h-14 sm:w-24 border-white shadow-md scale-105'
+                          : 'h-10 w-14 sm:h-12 sm:w-18 border-white/40 opacity-75 hover:opacity-100'
+                      }`}
+                    >
+                      <img src={photo.image} alt="" className="h-full w-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* PARALLAX HERO SECTION */}
-      <section ref={heroRef} className="relative pt-4 sm:pt-8 overflow-hidden">
+      <section ref={heroRef} className="relative overflow-hidden">
         {/* Parallax Ambient Background Glow */}
         <motion.div
           style={{ y: heroBgOrbY }}

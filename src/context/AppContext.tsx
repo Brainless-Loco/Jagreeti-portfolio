@@ -694,6 +694,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const updateGalleryPhoto = (id: string, updated: Partial<GalleryPhoto>) => {
     if (updated.category) addCustomCategory('gallery', updated.category);
+    const existing = rawGalleryPhotos.find((item) => item.id === id);
     setGalleryPhotos((prev) =>
       prev.map((g) => {
         if (g.id !== id) return g;
@@ -701,6 +702,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         return { ...g, ...updated, image: resolvedImg, imageUrl: resolvedImg };
       })
     );
+    if (existing?.storagePath && updated.storagePath !== undefined && existing.storagePath !== updated.storagePath) {
+      void removeStorageFile(existing.storagePath);
+    }
   };
 
   const deleteGalleryPhoto = (id: string) => {

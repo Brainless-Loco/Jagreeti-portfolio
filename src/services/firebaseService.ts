@@ -69,9 +69,23 @@ export async function replaceCollection<T extends { id: string }>(
   });
   items.forEach((item) => {
     const { id, ...data } = item;
-    batch.set(doc(firestore!, collectionName, id), data);
+    batch.set(doc(firestore!, collectionName, id), removeUndefinedValues(data));
   });
   await batch.commit();
+}
+
+function removeUndefinedValues(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return value.map((item) => removeUndefinedValues(item));
+  }
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value)
+        .filter(([, item]) => item !== undefined)
+        .map(([key, item]) => [key, removeUndefinedValues(item)])
+    );
+  }
+  return value;
 }
 
 export async function replaceSingleton<T extends DocumentData>(
