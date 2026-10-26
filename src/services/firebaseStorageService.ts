@@ -7,7 +7,8 @@ export type StorageFolder =
   | 'projects'
   | 'gallery/photos'
   | 'gallery/videos'
-  | 'gallery/albums';
+  | 'gallery/albums'
+  | 'notices';
 
 export const FIREBASE_COLLECTIONS = {
   SITE_SETTINGS: 'site_settings',

@@ -133,6 +133,8 @@ export interface NoticeItem {
   contentBn: string;
   image?: string;
   storagePath?: string;
+  attachmentType?: 'pdf' | 'image';
+  attachmentName?: string;
   isUrgent?: boolean;
 }
 

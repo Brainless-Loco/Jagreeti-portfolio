@@ -7,6 +7,8 @@ import {
   X,
   Share2,
   Clock,
+  FileText,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { NoticeItem } from '../types';
@@ -185,6 +187,12 @@ export const NoticesPage: React.FC = () => {
                   <p className="text-xs sm:text-sm text-slate-600 line-clamp-2 leading-relaxed">
                     {language === 'bn' ? notice.summaryBn : notice.summary}
                   </p>
+                  {notice.image && (
+                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#1e77bd]">
+                      {notice.attachmentType === 'pdf' ? <FileText className="w-3.5 h-3.5" /> : <ImageIcon className="w-3.5 h-3.5" />}
+                      {language === 'bn' ? 'সংযুক্ত ফাইল আছে' : 'Attachment available'}
+                    </span>
+                  )}
                 </div>
 
                 <div className="shrink-0 flex items-center gap-2 text-xs font-bold text-[#04345c]">
@@ -229,6 +237,37 @@ export const NoticesPage: React.FC = () => {
             <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/60 text-sm sm:text-base text-slate-700 leading-relaxed whitespace-pre-line">
               {language === 'bn' ? activeNotice.contentBn : activeNotice.content}
             </div>
+
+            {activeNotice.image && (
+              <div className="space-y-2">
+                <h3 className="text-sm font-bold text-slate-800">
+                  {language === 'bn' ? 'সংযুক্ত নোটিশ' : 'Attached Notice'}
+                </h3>
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-2">
+                  {activeNotice.attachmentType === 'pdf' ? (
+                    <iframe
+                      src={activeNotice.image}
+                      title={activeNotice.attachmentName || 'Notice PDF'}
+                      className="w-full h-[min(60vh,520px)] rounded-xl bg-white"
+                    />
+                  ) : (
+                    <img
+                      src={activeNotice.image}
+                      alt={activeNotice.attachmentName || 'Notice attachment'}
+                      className="max-h-[min(60vh,520px)] w-full rounded-xl object-contain"
+                    />
+                  )}
+                </div>
+                <a
+                  href={activeNotice.image}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex text-xs font-bold text-[#1e77bd] hover:underline"
+                >
+                  {language === 'bn' ? 'নতুন ট্যাবে খুলুন' : 'Open attachment in a new tab'}
+                </a>
+              </div>
+            )}
 
             <div className="flex items-center justify-between pt-2">
               <button

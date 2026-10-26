@@ -9,10 +9,13 @@ import {
   AlertCircle,
   Calendar,
   Clock,
+  UploadCloud,
 } from 'lucide-react';
 import { useApp } from '../../../context/AppContext';
 import { NoticeItem } from '../../../types';
 import { CategoryAutocomplete } from '../../../components/admin/CategoryAutocomplete';
+import { removeStorageFile } from '../../../services/firebaseService';
+import { uploadMediaToFirebaseStorage } from '../../../services/firebaseStorageService';
 
 export const AdminNoticesTab: React.FC = () => {
   const {
@@ -28,6 +31,8 @@ export const AdminNoticesTab: React.FC = () => {
 
   const [editingItem, setEditingItem] = useState<NoticeItem | null>(null);
   const [isCreating, setIsCreating] = useState<boolean>(false);
+  const [uploadingAttachment, setUploadingAttachment] = useState(false);
+  const [attachmentError, setAttachmentError] = useState('');
 
   const [formData, setFormData] = useState<Partial<NoticeItem>>({
     title: '',
@@ -53,6 +58,7 @@ export const AdminNoticesTab: React.FC = () => {
       category: 'circular',
       isUrgent: false,
     });
+    setAttachmentError('');
     setIsCreating(true);
     setEditingItem(null);
   };
@@ -61,6 +67,43 @@ export const AdminNoticesTab: React.FC = () => {
     setEditingItem(item);
     setFormData(item);
     setIsCreating(false);
+    setAttachmentError('');
+  };
+
+  const handleAttachmentSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+
+    const isImage = file.type === 'image/jpeg' || file.type === 'image/jpg';
+    const isPdf = file.type === 'application/pdf';
+    if (!isImage && !isPdf) {
+      setAttachmentError(
+        language === 'bn'
+          ? 'শুধুমাত্র PDF অথবা JPG ফাইল আপলোড করুন।'
+          : 'Only PDF or JPG files can be uploaded.'
+      );
+      return;
+    }
+
+    try {
+      setAttachmentError('');
+      setUploadingAttachment(true);
+      const result = await uploadMediaToFirebaseStorage(file, 'notices');
+      setFormData((previous) => ({
+        ...previous,
+        image: result.url,
+        storagePath: result.storagePath,
+        attachmentType: isPdf ? 'pdf' : 'image',
+        attachmentName: result.fileName,
+      }));
+    } catch (error) {
+      setAttachmentError(
+        language === 'bn' ? 'ফাইল আপলোড ব্যর্থ হয়েছে।' : 'The file upload failed. Please try again.'
+      );
+    } finally {
+      setUploadingAttachment(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -73,6 +116,9 @@ export const AdminNoticesTab: React.FC = () => {
 
     if (editingItem) {
       updateNotice(editingItem.id, formData);
+      if (editingItem.storagePath && editingItem.storagePath !== formData.storagePath) {
+        void removeStorageFile(editingItem.storagePath);
+      }
       showToast(
         language === 'bn' ? 'বিজ্ঞপ্তি সফলভাবে হালনাগাদ হয়েছে' : 'Notice circular updated in Firestore',
         'success'
@@ -305,6 +351,60 @@ export const AdminNoticesTab: React.FC = () => {
                   onChange={(e) => setFormData({ ...formData, contentBn: e.target.value })}
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-[#1e77bd]"
                 />
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">পূর্ণ বিবরণ / Content (English)</label>
+                <textarea
+                  rows={3}
+                  value={formData.content}
+                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-[#1e77bd]"
+                />
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <label className="font-bold text-slate-800 flex items-center gap-1.5">
+                    <UploadCloud className="w-4 h-4 text-[#1e77bd]" />
+                    {language === 'bn' ? 'নোটিশ ফাইল (ঐচ্ছিক)' : 'Notice File (Optional)'}
+                  </label>
+                  <span className="text-[10px] text-slate-500">PDF or JPG</span>
+                </div>
+                <input
+                  type="file"
+                  accept="application/pdf,image/jpeg,image/jpg"
+                  onChange={handleAttachmentSelect}
+                  disabled={uploadingAttachment}
+                  className="block w-full text-xs text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-[#04345c] file:px-3 file:py-2 file:text-xs file:font-bold file:text-white hover:file:bg-[#04345c]/90"
+                />
+                {uploadingAttachment && (
+                  <p className="text-xs font-semibold text-[#1e77bd]">
+                    {language === 'bn' ? 'ফাইল আপলোড হচ্ছে...' : 'Uploading file...'}
+                  </p>
+                )}
+                {attachmentError && <p className="text-xs font-semibold text-rose-600">{attachmentError}</p>}
+                {formData.image && (
+                  <div className="rounded-xl border border-slate-200 bg-white p-2">
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className="text-xs font-semibold text-slate-700 truncate">
+                        {formData.attachmentName || (formData.attachmentType === 'pdf' ? 'PDF attachment' : 'JPG attachment')}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, image: '', storagePath: '', attachmentType: undefined, attachmentName: undefined })}
+                        className="text-xs font-semibold text-rose-600 hover:underline"
+                      >
+                        {language === 'bn' ? 'সরান' : 'Remove'}
+                      </button>
+                    </div>
+                    {formData.attachmentType === 'pdf' ? (
+                      <iframe src={formData.image} title="Notice PDF preview" className="w-full h-48 rounded-lg border border-slate-100" />
+                    ) : (
+                      <img src={formData.image} alt="Notice attachment preview" className="max-h-48 w-full rounded-lg object-contain" />
+                    )}
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
