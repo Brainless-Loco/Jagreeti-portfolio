@@ -26,12 +26,12 @@ export const Navbar: React.FC = () => {
   const mainNavItems = [
     { id: 'home', label: t.nav.home },
     { id: 'about', label: t.nav.about },
-    { id: 'committee', label: language === 'bn' ? 'কমিটি পরিচিতি' : 'About Committee', icon: Users },
+    { id: 'committee', label: t.nav.committee },
     { id: 'programs', label: t.nav.programs },
     { id: 'projects', label: t.nav.projects },
     { id: 'gallery', label: t.nav.gallery },
     { id: 'notices', label: t.nav.notices },
-    { id: 'volunteer', label: t.nav.volunteer },
+    { id: 'constitution', label: t.nav.constitution, },
     { id: 'contact', label: t.nav.contact },
   ];
 

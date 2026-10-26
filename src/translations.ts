@@ -12,6 +12,7 @@ export const translations = {
       gallery: 'Gallery',
       notices: 'Notices',
       volunteer: 'Join Us',
+      constitution: 'Constitution',
       donate: 'Donate',
       contact: 'Contact',
       firebase: 'Firebase Service',
@@ -268,12 +269,13 @@ export const translations = {
     nav: {
       home: 'মূলপাতা',
       about: 'আমাদের সম্পর্কে',
-      committee: 'কমিটি পরিচিতি',
+      committee: 'কার্যকরী সংসদ',
       programs: 'কার্যক্রম',
       projects: 'প্রকল্পসমূহ',
       gallery: 'গ্যালারি',
       notices: 'নোটিশ ও বিজ্ঞপ্তি',
       volunteer: 'যুক্ত হোন',
+      constitution: 'সংবিধান',
       donate: 'অনুদান',
       contact: 'যোগাযোগ',
       firebase: 'ফায়ারবেস সার্ভিস',
@@ -314,7 +316,7 @@ export const translations = {
       description:
         'জাগৃতি একটি সমাজকল্যাণমূলক অরাজনৈতিক যুব সংগঠন। অসচ্ছল মেধাবী শিক্ষার্থীদের শিক্ষাবৃত্তি, শীতবস্ত্র বিতরণ, বিনামূল্যে চিকিৎসাসেবা এবং পরিবেশ সুরক্ষায় আমরা নিবেদিতপ্রাণ।',
       ctaDonate: 'অনুদান প্রদান করুন',
-      ctaCommittee: 'আমাদের কমিটি পরিচিতি',
+      ctaCommittee: 'আমাদের কার্যকরী সংসদ পরিচিতি',
       ctaVolunteer: 'স্বেচ্ছাসেবী হোন',
       quickStats: {
         livesSaved: '১২,৫০০+ সুবিধাভোগী',

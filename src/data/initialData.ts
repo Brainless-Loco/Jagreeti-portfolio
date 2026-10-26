@@ -1189,6 +1189,12 @@ export const INITIAL_SITE_SETTINGS: SiteSettings = {
   tickerTextEn: 'JAGREETI — Apolitical Socio-Humanitarian Youth Movement | Bangladesh',
   tickerTextBn: 'জাগ্রীতি — অরাজনৈতিক সমাজকল্যাণমূলক যুব সংগঠন | লালমনিরহাট',
   heroCarouselIntervalSeconds: 3,
+  impactMetrics: [
+    { id: 'beneficiaries', titleEn: 'Lives Impacted Directly', titleBn: 'সরাসরি উপকৃত মানুষ', value: 500, icon: 'users' },
+    { id: 'blood', titleEn: 'Bags of Blood Arranged', titleBn: 'ব্যাগ রক্তের ব্যবস্থা সম্পন্ন', value: 10, icon: 'droplets' },
+    { id: 'students', titleEn: 'Students Supported', titleBn: 'শিক্ষার্থীকে বৃত্তি ও উপকরণ', value: 230, icon: 'book-open' },
+    { id: 'trees', titleEn: 'Saplings Planted', titleBn: 'বৃক্ষরোপণ ও সবুজায়ন', value: 18200, icon: 'tree' },
+  ],
   beneficiariesCount: 500,
   bloodBagsArrangedCount: 10,
   volunteersCount: 1000,

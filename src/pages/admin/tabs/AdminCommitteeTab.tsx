@@ -874,7 +874,7 @@ export const AdminCommitteeTab: React.FC = () => {
                     required
                     value={groupForm.nameBn}
                     onChange={(e) => setGroupForm({ ...groupForm, nameBn: e.target.value })}
-                    placeholder="যেমন: কেন্দ্রীয় কার্যনির্বাহী পরিষদ"
+                    placeholder="যেমন: কার্যকরী সংসদ"
                     className="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white"
                   />
                 </div>

@@ -167,7 +167,7 @@ export const CommitteePage: React.FC = () => {
             </div>
             <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
               {language === 'bn'
-                ? 'জাগৃতি কার্যনির্বাহী ও সদস্য তালিকা'
+                ? 'কার্যকরী সংসদ ও সদস্য তালিকা'
                 : 'JAGREETI Leadership & Member Directory'}
             </h1>
             <p className="text-slate-600 text-sm sm:text-base leading-relaxed">

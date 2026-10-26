@@ -241,6 +241,7 @@ export interface SiteSettings {
   tickerTextEn: string;
   tickerTextBn: string;
   heroCarouselIntervalSeconds?: number;
+  impactMetrics?: ImpactMetric[];
   beneficiariesCount: number;
   bloodBagsArrangedCount: number;
   volunteersCount: number;
@@ -260,6 +261,16 @@ export interface SiteSettings {
   missionBn: string;
   visionEn: string;
   visionBn: string;
+}
+
+export type ImpactMetricIcon = 'users' | 'droplets' | 'book-open' | 'tree' | 'heart' | 'award' | 'hand-heart' | 'star';
+
+export interface ImpactMetric {
+  id: string;
+  titleEn: string;
+  titleBn: string;
+  value: number;
+  icon: ImpactMetricIcon;
 }
 
 export interface UserGoal {

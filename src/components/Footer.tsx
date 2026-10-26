@@ -92,11 +92,11 @@ export const Footer: React.FC = () => {
             <div className="pt-2 flex flex-col gap-2 text-xs">
               <div className="flex items-center gap-2 text-slate-300">
                 <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>JAGREETI Central Office, Main Road, Lalmonirhat, Bangladesh</span>
+                <span>Jagreeti Building, Hathazari College Gate, Fatika, Hathazari Pourashova, Hathazari, Chittagong</span>
               </div>
               <div className="flex items-center gap-2 text-slate-300">
                 <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span className="font-mono">+880 1744-769331 (24/7 Helpline)</span>
+                <span className="font-mono">+880-1819-620432</span>
               </div>
               <div className="flex items-center gap-2 text-slate-300">
                 <Mail className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -153,7 +153,7 @@ export const Footer: React.FC = () => {
                   className="hover:text-emerald-400 transition flex items-center gap-1.5 text-slate-300 font-medium"
                 >
                   <Users className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>{language === 'bn' ? 'কার্যনির্বাহী পরিষদ' : 'Executive Committee'}</span>
+                  <span>{language === 'bn' ? 'কার্যকরী সংসদ' : 'Executive Committee'}</span>
                 </button>
               </li>
               <li>

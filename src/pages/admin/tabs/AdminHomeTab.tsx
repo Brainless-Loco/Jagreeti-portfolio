@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Save, RefreshCw, Eye, CheckCircle2, Flame, Heart, Sparkles, Timer, Plus, Edit, Trash2, ArrowUp, ArrowDown, X, Image as ImageIcon } from 'lucide-react';
+import { Save, RefreshCw, Eye, CheckCircle2, Flame, Heart, Sparkles, Timer, Plus, Edit, Trash2, ArrowUp, ArrowDown, X, Image as ImageIcon, Users, Droplets, BookOpen, TreePine, Award, HandHeart, Star } from 'lucide-react';
 import { useApp } from '../../../context/AppContext';
-import { GalleryPhoto } from '../../../types';
+import { GalleryPhoto, ImpactMetric, ImpactMetricIcon } from '../../../types';
 import { MediaUploadField } from '../../../components/admin/MediaUploadField';
 
 export const AdminHomeTab: React.FC = () => {
@@ -41,9 +41,19 @@ export const AdminHomeTab: React.FC = () => {
     subtitle: '',
     subtitleBn: '',
   });
+  const legacyMetrics: ImpactMetric[] = [
+    { id: 'beneficiaries', titleEn: 'Lives Impacted Directly', titleBn: 'সরাসরি উপকৃত মানুষ', value: Number(siteSettings?.beneficiariesCount) || 0, icon: 'users' },
+    { id: 'blood', titleEn: 'Bags of Blood Arranged', titleBn: 'ব্যাগ রক্তের ব্যবস্থা সম্পন্ন', value: Number(siteSettings?.bloodBagsArrangedCount) || 0, icon: 'droplets' },
+    { id: 'students', titleEn: 'Students Supported', titleBn: 'শিক্ষার্থীকে বৃত্তি ও উপকরণ', value: Number(siteSettings?.scholarshipStudentsCount) || 0, icon: 'book-open' },
+    { id: 'trees', titleEn: 'Saplings Planted', titleBn: 'বৃক্ষরোপণ ও সবুজায়ন', value: Number(siteSettings?.treesPlantedCount) || 0, icon: 'tree' },
+  ];
+  const [impactMetrics, setImpactMetrics] = useState<ImpactMetric[]>(
+    () => siteSettings?.impactMetrics?.slice(0, 8) || legacyMetrics
+  );
 
   useEffect(() => {
     setFormData((prev) => ({ ...prev, ...siteSettings }));
+    setImpactMetrics(siteSettings?.impactMetrics?.slice(0, 8) || legacyMetrics);
   }, [siteSettings]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -56,7 +66,7 @@ export const AdminHomeTab: React.FC = () => {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    updateSiteSettings(formData);
+    updateSiteSettings({ ...formData, impactMetrics: impactMetrics.slice(0, 8) });
     showToast(
       language === 'bn'
         ? 'হোম পেজের কনটেন্ট ও পরিসংখ্যান সফলভাবে সংরক্ষিত হয়েছে।'
@@ -407,79 +417,51 @@ export const AdminHomeTab: React.FC = () => {
           </div>
         </div>
 
-        {/* Section 3: Live Verified Impact Counters */}
+        {/* Section 3: Configurable Impact Metrics */}
         <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-4">
           <div className="flex items-center gap-2 text-slate-900 font-bold text-sm pb-2 border-b border-slate-100">
             <Heart className="w-4 h-4 text-rose-600" />
-            <span>{language === 'bn' ? '৩. হোম পেজ প্রভাব পরিসংখ্যান (কাউন্টার)' : '3. Live Public Impact Counters'}</span>
+            <span>{language === 'bn' ? '৩. হোম পেজ প্রভাব পরিসংখ্যান (সর্বোচ্চ ৮টি)' : '3. Configurable Impact Metrics (up to 8)'}</span>
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                {language === 'bn' ? 'মোট সেবাগ্রহীতা' : 'Total Beneficiaries'}
-              </label>
-              <input
-                type="number"
-                name="beneficiariesCount"
-                value={formData.beneficiariesCount}
-                onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 text-sm font-bold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1e77bd]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                {language === 'bn' ? 'ব্যাগ রক্তের ব্যবস্থা সম্পন্ন' : 'Blood Bags Arranged'}
-              </label>
-              <input
-                type="number"
-                min={0}
-                name="bloodBagsArrangedCount"
-                value={formData.bloodBagsArrangedCount}
-                onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 text-sm font-bold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1e77bd]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                {language === 'bn' ? 'সক্রিয় স্বেচ্ছাসেবী' : 'Active Volunteers'}
-              </label>
-              <input
-                type="number"
-                name="volunteersCount"
-                value={formData.volunteersCount}
-                onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 text-sm font-bold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1e77bd]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                {language === 'bn' ? 'রোপিত ও সংরক্ষিত বৃক্ষ' : 'Trees Planted'}
-              </label>
-              <input
-                type="number"
-                name="treesPlantedCount"
-                value={formData.treesPlantedCount}
-                onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 text-sm font-bold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1e77bd]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                {language === 'bn' ? 'মাসিক বৃত্তিপ্রাপ্ত শিক্ষার্থী' : 'Scholarship Students'}
-              </label>
-              <input
-                type="number"
-                name="scholarshipStudentsCount"
-                value={formData.scholarshipStudentsCount}
-                onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 text-sm font-bold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1e77bd]"
-              />
-            </div>
+          <div className="space-y-3">
+            {impactMetrics.map((metric, index) => {
+              const iconOptions: { value: ImpactMetricIcon; label: string; Icon: React.FC<{ className?: string }> }[] = [
+                { value: 'users', label: 'Users', Icon: Users },
+                { value: 'droplets', label: 'Blood', Icon: Droplets },
+                { value: 'book-open', label: 'Education', Icon: BookOpen },
+                { value: 'tree', label: 'Environment', Icon: TreePine },
+                { value: 'heart', label: 'Heart', Icon: Heart },
+                { value: 'award', label: 'Award', Icon: Award },
+                { value: 'hand-heart', label: 'Service', Icon: HandHeart },
+                { value: 'star', label: 'Star', Icon: Star },
+              ];
+              return (
+                <div key={metric.id} className="grid grid-cols-1 sm:grid-cols-[auto_minmax(0,1fr)_minmax(0,1fr)_130px_100px_44px] gap-2 items-center p-3 rounded-xl bg-slate-50 border border-slate-200">
+                  <span className="text-xs font-bold text-slate-500">#{index + 1}</span>
+                  <input value={metric.titleEn} onChange={(e) => setImpactMetrics((items) => items.map((item) => item.id === metric.id ? { ...item, titleEn: e.target.value } : item))} placeholder="Title (English)" className="w-full min-w-0 px-3 py-2 rounded-lg border border-slate-300 bg-white text-xs" />
+                  <input value={metric.titleBn} onChange={(e) => setImpactMetrics((items) => items.map((item) => item.id === metric.id ? { ...item, titleBn: e.target.value } : item))} placeholder="শিরোনাম (বাংলা)" className="w-full min-w-0 px-3 py-2 rounded-lg border border-slate-300 bg-white text-xs" />
+                  <input type="number" min={0} value={metric.value} onChange={(e) => setImpactMetrics((items) => items.map((item) => item.id === metric.id ? { ...item, value: Number(e.target.value) } : item))} placeholder="Number" className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-xs font-bold" />
+                  <select value={metric.icon} onChange={(e) => setImpactMetrics((items) => items.map((item) => item.id === metric.id ? { ...item, icon: e.target.value as ImpactMetricIcon } : item))} className="w-full px-1 py-2 rounded-lg border border-slate-300 bg-white text-xs" aria-label="Metric icon">
+                    {iconOptions.map(({ value, label, Icon }) => <option key={value} value={value}>{label}</option>)}
+                  </select>
+                  <div className="flex items-center justify-center gap-1">
+                    {(() => {
+                      const selected = iconOptions.find((option) => option.value === metric.icon) || iconOptions[0];
+                      return <selected.Icon className="w-4 h-4 text-[#1e77bd]" />;
+                    })()}
+                  </div>
+                  <button type="button" aria-label="Remove metric" onClick={() => setImpactMetrics((items) => items.filter((item) => item.id !== metric.id))} className="p-2 rounded-lg border border-rose-200 bg-white text-rose-600 hover:bg-rose-50">
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+          <div className="flex items-center justify-between gap-3">
+            <button type="button" disabled={impactMetrics.length >= 8} onClick={() => setImpactMetrics((items) => [...items, { id: `metric-${Date.now()}`, titleEn: '', titleBn: '', value: 0, icon: 'star' }])} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#10564f] text-white text-xs font-bold disabled:opacity-40">
+              <Plus className="w-3.5 h-3.5" /> {language === 'bn' ? 'পরিসংখ্যান যোগ করুন' : 'Add Metric'}
+            </button>
+            <span className="text-[11px] text-slate-500">{impactMetrics.length}/8</span>
           </div>
         </div>
 

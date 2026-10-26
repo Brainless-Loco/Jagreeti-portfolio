@@ -18,10 +18,11 @@ import {
   X,
   Youtube,
   Camera,
+  Star,
 } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useApp } from '../context/AppContext';
-import { DignitaryMessage } from '../types';
+import { DignitaryMessage, ImpactMetricIcon } from '../types';
 import { getYouTubeEmbedUrl, isYouTubeUrl } from '../services/firebaseStorageService';
 
 export const HomePage: React.FC = () => {
@@ -66,36 +67,23 @@ export const HomePage: React.FC = () => {
   const formatCount = (value: number | undefined, locale = 'en-US') =>
     value === undefined || value === null ? '' : `${value.toLocaleString(locale)}+`;
 
-  const impactStats = [
-    {
-      icon: Users,
-      valueEn: formatCount(siteSettings?.beneficiariesCount),
-      valueBn: formatCount(siteSettings?.beneficiariesCount, 'bn-BD'),
-      labelEn: 'Lives Impacted Directly',
-      labelBn: 'সরাসরি উপকৃত মানুষ',
-    },
-    {
-      icon: Droplets,
-      valueEn: formatCount(siteSettings?.bloodBagsArrangedCount),
-      valueBn: formatCount(siteSettings?.bloodBagsArrangedCount, 'bn-BD'),
-      labelEn: 'Bags of Blood Arranged',
-      labelBn: 'ব্যাগ রক্তের ব্যবস্থা সম্পন্ন',
-    },
-    {
-      icon: BookOpen,
-      valueEn: formatCount(siteSettings?.scholarshipStudentsCount),
-      valueBn: formatCount(siteSettings?.scholarshipStudentsCount, 'bn-BD'),
-      labelEn: 'Students Supported',
-      labelBn: 'শিক্ষার্থীকে বৃত্তি ও উপকরণ',
-    },
-    {
-      icon: TreePine,
-      valueEn: formatCount(siteSettings?.treesPlantedCount),
-      valueBn: formatCount(siteSettings?.treesPlantedCount, 'bn-BD'),
-      labelEn: 'Saplings Planted',
-      labelBn: 'বৃক্ষরোপণ ও সবুজায়ন',
-    },
-  ];
+  const iconMap: Record<ImpactMetricIcon, typeof Users> = {
+    users: Users,
+    droplets: Droplets,
+    'book-open': BookOpen,
+    tree: TreePine,
+    heart: Heart,
+    award: Award,
+    'hand-heart': HandHeart,
+    star: Star,
+  };
+  const impactStats = (siteSettings?.impactMetrics || []).slice(0, 8).map((metric) => ({
+    icon: iconMap[metric.icon] || Users,
+    valueEn: formatCount(metric.value),
+    valueBn: formatCount(metric.value, 'bn-BD'),
+    labelEn: metric.titleEn,
+    labelBn: metric.titleBn,
+  }));
 
   // Featured video or gallery media for Home preview
   const featuredVideosAndPhotos = galleryPhotos.slice(0, 3);
@@ -205,7 +193,7 @@ export const HomePage: React.FC = () => {
       )}
 
       {/* PARALLAX HERO SECTION */}
-      <section ref={heroRef} className="relative overflow-hidden">
+      <section ref={heroRef} className="relative overflow-hidden mb-5">
         {/* Parallax Ambient Background Glow */}
         <motion.div
           style={{ y: heroBgOrbY }}
@@ -386,7 +374,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* IMPACT METRICS SECTION (With Smooth Viewport Reveal) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-0">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {impactStats.map((stat, idx) => {
             const Icon = stat.icon;
@@ -423,7 +411,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* DIGNITARY & LEADER SPEECHES (Sorted by Priority) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      {/* <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-2 max-w-2xl">
             <div
@@ -518,7 +506,7 @@ export const HomePage: React.FC = () => {
             </motion.div>
           ))}
         </div>
-      </section>
+      </section> */}
 
       {/* CORE PROGRAMS / WINGS SECTION (Dynamic & Sorted by Priority) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
