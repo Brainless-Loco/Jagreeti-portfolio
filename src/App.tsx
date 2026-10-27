@@ -19,6 +19,7 @@ import { NoticesPage } from './pages/NoticesPage';
 import { VolunteerPage } from './pages/VolunteerPage';
 import { DonationPage } from './pages/DonationPage';
 import { ContactPage } from './pages/ContactPage';
+import { ConstitutionPage } from './pages/ConstitutionPage';
 import { AdminPanelPage } from './pages/AdminPanelPage';
 
 const MainContent: React.FC = () => {
@@ -53,6 +54,8 @@ const MainContent: React.FC = () => {
         return <DonationPage />;
       case 'contact':
         return <ContactPage />;
+      case 'constitution':
+        return <ConstitutionPage />;
       case 'admin':
         return <AdminPanelPage />;
       default:

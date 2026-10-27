@@ -23,7 +23,7 @@ export const Navbar: React.FC = () => {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
-  const mainNavItems = [
+  const mainNavItems: Array<{ id: string; label: string; icon?: React.ElementType }> = [
     { id: 'home', label: t.nav.home },
     { id: 'about', label: t.nav.about },
     { id: 'committee', label: t.nav.committee },
@@ -31,7 +31,7 @@ export const Navbar: React.FC = () => {
     { id: 'projects', label: t.nav.projects },
     { id: 'gallery', label: t.nav.gallery },
     { id: 'notices', label: t.nav.notices },
-    { id: 'constitution', label: t.nav.constitution, },
+    { id: 'constitution', label: t.nav.constitution },
     { id: 'contact', label: t.nav.contact },
   ];
 

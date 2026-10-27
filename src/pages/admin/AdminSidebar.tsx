@@ -162,10 +162,10 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
               <ShieldCheck className="w-5 h-5 text-[#bad3e4]" />
             </div>
             <div>
-              <h2 className="font-bold text-base tracking-tight text-white">
+              <h2 className="font-bold text-2xl tracking-tight text-white">
                 {language === 'bn' ? 'জাগৃতি অ্যাডমিন' : 'JAGREETI CMS'}
               </h2>
-              <p className="text-[11px] text-[#bad3e4]/80">
+              <p className="text-[14px] text-[#bad3e4]/80">
                 {language === 'bn' ? 'কেন্দ্রীয় কন্টেন্ট ম্যানেজমেন্ট' : 'Full Website Content Control'}
               </p>
             </div>
@@ -174,7 +174,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
 
         {/* Navigation Links */}
         <div className="p-3 space-y-1 max-h-[65vh] lg:max-h-none overflow-y-auto">
-          <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#bad3e4]/60">
+          <div className="px-3 py-1.5 text-[15px] uppercase tracking-wider text-[#bad3e4]/60">
             {language === 'bn' ? 'সকল পেজ ও ডাটা নেভিগেশন' : 'Pages & Content Navigation'}
           </div>
           {navItems.map((item) => {
@@ -184,7 +184,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
               <button
                 key={item.id}
                 onClick={() => onSelectSection(item.id)}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xlg  transition-all cursor-pointer ${
                   isActive
                     ? 'bg-[#1e77bd] text-white shadow-md'
                     : 'text-slate-200 hover:bg-white/10 hover:text-white'
@@ -221,10 +221,10 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       <div className="p-4 border-t border-white/10 bg-[#032544]/90 mt-4">
         <button
           onClick={onLogout}
-          className="w-full py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition cursor-pointer"
+          className="w-full py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-lg flex items-center justify-center gap-2 shadow-sm transition cursor-pointer"
         >
           <LogOut className="w-4 h-4" />
-          <span>{language === 'bn' ? 'লগআউট করুন (Logout)' : 'Logout from Admin'}</span>
+          <span>{language === 'bn' ? 'লগআউট করুন' : 'Logout from Admin'}</span>
         </button>
       </div>
     </aside>

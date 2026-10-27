@@ -71,8 +71,8 @@ export const AdminGalleryTab: React.FC = () => {
     titleBn: '',
     subtitle: '',
     subtitleBn: '',
-    category: 'Medical',
-    categoryBn: 'চিকিৎসা সেবা',
+    category: '',
+    categoryBn: '',
     date: new Date().getFullYear().toString(),
     mediaType: 'photo',
     image: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=800&auto=format&fit=crop&q=80',
@@ -118,8 +118,8 @@ export const AdminGalleryTab: React.FC = () => {
       titleBn: '',
       subtitle: '',
       subtitleBn: '',
-      category: 'Medical',
-      categoryBn: 'চিকিৎসা সেবা',
+      category: '',
+      categoryBn: '',
       date: new Date().getFullYear().toString(),
       mediaType: presetType,
       image:
@@ -187,8 +187,8 @@ export const AdminGalleryTab: React.FC = () => {
       titleBn: mediaForm.titleBn || mediaForm.title,
       subtitle: mediaForm.subtitle || undefined,
       subtitleBn: mediaForm.subtitleBn || undefined,
-      category: mediaForm.category || 'Events',
-      categoryBn: mediaForm.categoryBn || mediaForm.category || 'ইভেন্ট',
+      category: mediaForm.category || '',
+      categoryBn: mediaForm.categoryBn || mediaForm.category || '',
       date: mediaForm.date || '2025',
       mediaType: mediaForm.mediaType,
       image: finalImage,
@@ -278,7 +278,7 @@ export const AdminGalleryTab: React.FC = () => {
       coverImage: albumForm.coverImage,
       storagePath: albumForm.storagePath || undefined,
       category: albumForm.category || 'Events',
-      categoryBn: albumForm.categoryBn || albumForm.category || 'ইভেন্ট',
+      categoryBn: albumForm.categoryBn || albumForm.category || '',
       date: albumForm.date || '2025',
       priority: Number(albumForm.priority) || galleryAlbums.length + 1,
     };
@@ -829,7 +829,7 @@ export const AdminGalleryTab: React.FC = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">ক্যাপশন / শিরোনাম (বাংলা) *</label>
+                  <label className="block text-md font-bold text-slate-700 mb-1">ক্যাপশন / শিরোনাম (বাংলা) *</label>
                   <input
                     type="text"
                     required
@@ -866,7 +866,7 @@ export const AdminGalleryTab: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">ক্যাপশন / শিরোনাম (English) *</label>
+                  <label className="block text-md font-bold text-slate-700 mb-1">ক্যাপশন / শিরোনাম (English) *</label>
                   <input
                     type="text"
                     required
@@ -889,7 +889,7 @@ export const AdminGalleryTab: React.FC = () => {
                 />
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">ক্যাটাগরি (বাংলা)</label>
+                  <label className="block text-md font-bold text-slate-700 mb-1">ক্যাটাগরি (বাংলা)</label>
                   <input
                     type="text"
                     value={mediaForm.categoryBn}
@@ -900,7 +900,7 @@ export const AdminGalleryTab: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">সাল / তারিখ</label>
+                  <label className="block text-md font-bold text-slate-700 mb-1">সাল / তারিখ</label>
                   <input
                     type="text"
                     value={mediaForm.date}
@@ -914,7 +914,7 @@ export const AdminGalleryTab: React.FC = () => {
               {/* Album Assignment & Priority */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">
+                  <label className="block text-md font-bold text-slate-700 mb-1">
                     {language === 'bn' ? 'অ্যালবামে যুক্ত করুন (ঐচ্ছিক)' : 'Assign to Album (Optional)'}
                   </label>
                   <select
@@ -934,7 +934,7 @@ export const AdminGalleryTab: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">
+                  <label className="block text-md font-bold text-slate-700 mb-1">
                     {language === 'bn' ? 'ক্রম / সিরিয়াল নম্বর (Priority)' : 'Priority Order'}
                   </label>
                   <input
@@ -1031,7 +1031,7 @@ export const AdminGalleryTab: React.FC = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">অ্যালবামের নাম (বাংলা) *</label>
+                  <label className="block text-md font-bold text-slate-700 mb-1">অ্যালবামের নাম (বাংলা) *</label>
                   <input
                     type="text"
                     required
@@ -1042,7 +1042,7 @@ export const AdminGalleryTab: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Album Title (English) *</label>
+                  <label className="block text-md font-bold text-slate-700 mb-1">Album Title (English) *</label>
                   <input
                     type="text"
                     required
@@ -1056,7 +1056,7 @@ export const AdminGalleryTab: React.FC = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">সংক্ষিপ্ত বিবরণ (বাংলা)</label>
+                  <label className="block text-md font-bold text-slate-700 mb-1">সংক্ষিপ্ত বিবরণ (বাংলা)</label>
                   <textarea
                     rows={2}
                     value={albumForm.descriptionBn}
@@ -1065,7 +1065,7 @@ export const AdminGalleryTab: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Description (English)</label>
+                  <label className="block text-md font-bold text-slate-700 mb-1">Description (English)</label>
                   <textarea
                     rows={2}
                     value={albumForm.description}
@@ -1085,7 +1085,7 @@ export const AdminGalleryTab: React.FC = () => {
                 />
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">সাল / তারিখ</label>
+                  <label className="block text-md font-bold text-slate-700 mb-1">সাল / তারিখ</label>
                   <input
                     type="text"
                     value={albumForm.date}
@@ -1095,7 +1095,7 @@ export const AdminGalleryTab: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">ক্রম / সিরিয়াল (Priority)</label>
+                  <label className="block text-md font-bold text-slate-700 mb-1">ক্রম / সিরিয়াল (Priority)</label>
                   <input
                     type="number"
                     min={1}
