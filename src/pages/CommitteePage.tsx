@@ -85,14 +85,14 @@ export const CommitteePage: React.FC = () => {
                 {member.priority ?? idx + 1}
               </span>
               {groupTitle && (
-                <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/90 text-[#04345c] backdrop-blur-xs shadow-xs truncate max-w-[160px]">
+                <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-white/90 text-[#04345c] backdrop-blur-xs shadow-xs truncate max-w-[160px]">
                   {groupTitle}
                 </span>
               )}
             </div>
 
             <div className="absolute bottom-3 left-4 right-4 text-white">
-              <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider mb-1.5 bg-[#10564f] text-white shadow-xs">
+              <span className="inline-block px-2.5 py-0.5 rounded-full text-[12px] font-bold uppercase tracking-wider mb-1.5 bg-[#10564f] text-white shadow-xs">
                 {language === 'bn' ? member.roleBn : member.role}
               </span>
               <h3 className="text-lg font-bold leading-snug">
@@ -104,11 +104,11 @@ export const CommitteePage: React.FC = () => {
           <div className="p-5 space-y-3">
             {/* Member Tags */}
             {(member.tags || []).length > 0 && (
-              <div className="flex items-center gap-1.5 flex-wrap">
+              <div className="flex items-center gap-1.5 flex-wrap my-0">
                 {(member.tags || []).map((t) => (
                   <span
                     key={t}
-                    className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-[#bad3e4]/35 text-[#04345c] border border-[#bad3e4] text-[10px] font-bold"
+                    className="inline-flex items-center gap-1 px-2.5 py-0.3 rounded-lg bg-[#bad3e4]/35 text-[#04345c] border border-[#bad3e4] text-[10px] font-bold"
                   >
                     <Tag className="w-2.5 h-2.5 text-[#1e77bd]" />
                     {t}
@@ -123,7 +123,7 @@ export const CommitteePage: React.FC = () => {
           </div>
         </div>
 
-        <div className="px-5 py-3.5 bg-slate-50/70 border-t border-slate-100 flex items-center justify-between text-xs">
+        <div className="px-5 py-3.5 bg-slate-50/70 border-t border-slate-100 flex items-center justify-between">
           <span className="font-bold text-[#04345c] group-hover:underline">
             {language === 'bn' ? 'বিস্তারিত প্রোফাইল' : 'View Profile'}
           </span>
@@ -161,7 +161,7 @@ export const CommitteePage: React.FC = () => {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="max-w-2xl space-y-3">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#04345c]/10 text-[#04345c]">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-sm font-semibold uppercase tracking-wider bg-[#04345c]/10 text-[#04345c]">
               <Users className="w-3.5 h-3.5" />
               <span>{language === 'bn' ? 'নেতৃত্ব ও সদস্য ডিরেক্টরি' : 'Leadership & Member Directory'}</span>
             </div>
@@ -170,7 +170,7 @@ export const CommitteePage: React.FC = () => {
                 ? 'কার্যকরী সংসদ ও সদস্য তালিকা'
                 : 'JAGREETI Leadership & Member Directory'}
             </h1>
-            <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+            <p className="text-slate-600 text-md leading-relaxed">
               {language === 'bn'
                 ? 'সকল সদস্যের একক অগ্রাধিকার তালিকা (Single Priority List), ভূমিকা ট্যাগ এবং ঐচ্ছিক গ্রুপ অনুযায়ী আমাদের নিবেদিতপ্রাণ টিম।'
                 : 'Explore our unified priority-ordered member directory with role tags and optional committee groupings.'}
@@ -182,7 +182,7 @@ export const CommitteePage: React.FC = () => {
             <button
               type="button"
               onClick={() => setViewMode('single')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
+              className={`px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-2 cursor-pointer ${
                 viewMode === 'single'
                   ? 'bg-[#04345c] text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
@@ -195,7 +195,7 @@ export const CommitteePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setViewMode('grouped')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-2 cursor-pointer ${
                   viewMode === 'grouped'
                     ? 'bg-[#04345c] text-white shadow-xs'
                     : 'text-slate-600 hover:text-slate-900'

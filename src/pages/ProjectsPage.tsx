@@ -42,7 +42,7 @@ export const ProjectsPage: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="max-w-2xl space-y-3">
             <div
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-sm font-semibold uppercase tracking-wider"
               style={{
                 backgroundColor: `${currentPalette.primary}15`,
                 color: currentPalette.primary,
@@ -79,7 +79,7 @@ export const ProjectsPage: React.FC = () => {
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
             <button
               onClick={() => setCategoryFilter('all')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
+              className={`px-3.5 py-2 rounded-xl text-md font-semibold whitespace-nowrap transition cursor-pointer ${
                 categoryFilter === 'all'
                   ? 'bg-[#04345c] text-white shadow-xs'
                   : 'text-slate-600 hover:bg-slate-100'
@@ -91,7 +91,7 @@ export const ProjectsPage: React.FC = () => {
               <button
                 key={cat.id}
                 onClick={() => setCategoryFilter(cat.id)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
+                className={`px-3.5 py-2 rounded-xl text-md font-semibold whitespace-nowrap transition cursor-pointer ${
                   categoryFilter.toLowerCase() === cat.id.toLowerCase()
                     ? 'bg-[#04345c] text-white shadow-xs'
                     : 'text-slate-600 hover:bg-slate-100'
@@ -107,7 +107,7 @@ export const ProjectsPage: React.FC = () => {
               <button
                 key={status}
                 onClick={() => setStatusFilter(status)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg text-sm font-semibold capitalize transition cursor-pointer ${
                   statusFilter === status
                     ? 'bg-white text-slate-900 shadow-xs'
                     : 'text-slate-600 hover:text-slate-900'

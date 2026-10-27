@@ -1,7 +1,21 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Bangla SolaimanLipi';
+  src: url('/assets/fonts/BanglaSolaymanLipi.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'English Mukta Vaani';
+  src: url('/assets/fonts/EnglishMuktaVaani.ttf') format('truetype');
+  font-display: swap;
+}
+
 @layer base {
   :root {
+    --site-font-family: 'English Mukta Vaani', sans-serif;
+    --font-sans: var(--site-font-family);
     --navy-blue: #04345c;
     --blue-green: #10564f;
     --blue-grotto: #1e77bd;
@@ -21,14 +35,17 @@
   }
 
   body {
-    font-family: 'Plus Jakarta Sans', 'Hind Siliguri', system-ui, -apple-system, sans-serif;
+    font-family: var(--site-font-family);
     background-color: #ffffff;
     color: #1e293b;
   }
 
-  /* Bengali text styling refinement */
-  .font-bn {
-    font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif;
+  html[data-language='bn'] {
+    --site-font-family: 'Bangla SolaimanLipi', sans-serif;
+  }
+
+  .font-sans {
+    font-family: var(--site-font-family);
   }
 }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { AppProvider, useApp } from './context/AppContext';
 import { Navbar } from './components/Navbar';
@@ -22,7 +22,12 @@ import { ContactPage } from './pages/ContactPage';
 import { AdminPanelPage } from './pages/AdminPanelPage';
 
 const MainContent: React.FC = () => {
-  const { activePage } = useApp();
+  const { activePage, language } = useApp();
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.documentElement.dataset.language = language;
+  }, [language]);
 
   const renderActivePage = () => {
     switch (activePage) {

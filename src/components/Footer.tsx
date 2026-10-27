@@ -67,7 +67,7 @@ export const Footer: React.FC = () => {
       </div>
 
       {/* Main Footer Links */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-5">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
           {/* Brand Col */}
           <div className="lg:col-span-2 space-y-4">
@@ -78,12 +78,12 @@ export const Footer: React.FC = () => {
               >
                 <Heart className="w-5 h-5 fill-white/20 text-white" />
               </div>
-              <span className="text-xl font-black tracking-tight text-white">
+              <span className="text-3xl font-black tracking-tight text-white">
                 {language === 'bn' ? 'জাগৃতি' : 'JAGREETI'}
               </span>
             </div>
 
-            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-sm">
+            <p className="sm:text-sm md:text-lg text-slate-400 leading-relaxed max-w-sm">
               {language === 'bn'
                 ? 'জাগৃতি একটি সম্পূর্ণ অরাজনৈতিক, সামাজিক ও মানবিক যুব সংগঠন যা সুবিধাবঞ্চিতদের শিক্ষা, চিকিৎসা সহায়তা, দুর্যোগে ত্রাণ ও পরিবেশ সুরক্ষায় কাজ করে।'
                 : 'JAGREETI is an apolitical socio-humanitarian youth voluntary organization dedicated to grassroots education, healthcare support, disaster relief, and environmental preservation.'}
@@ -107,14 +107,14 @@ export const Footer: React.FC = () => {
 
           {/* Quick Links */}
           <div>
-            <h5 className="text-white text-xs font-bold uppercase tracking-wider mb-4">
+            <h5 className="text-white text-lg font-bold uppercase tracking-wider mb-4">
               {language === 'bn' ? 'মূল নেভিগেশন' : 'Navigation'}
             </h5>
             <ul className="space-y-2.5 text-xs">
               {[
                 { id: 'home', label: t.nav.home },
                 { id: 'about', label: t.nav.about },
-                { id: 'committee', label: language === 'bn' ? 'কমিটি পরিচিতি' : 'About Committee' },
+                { id: 'committee', label: t.nav.committee },
                 { id: 'programs', label: t.nav.programs },
                 { id: 'projects', label: t.nav.projects },
                 { id: 'notices', label: t.nav.notices },
@@ -128,7 +128,7 @@ export const Footer: React.FC = () => {
                       setActivePage(item.id);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className="hover:text-emerald-400 transition flex items-center gap-1.5"
+                    className="hover:text-emerald-400 text-[15px] transition flex items-center gap-1.5"
                   >
                     <ChevronRight className="w-3 h-3 text-slate-600" />
                     <span>{item.label}</span>
@@ -140,7 +140,7 @@ export const Footer: React.FC = () => {
 
           {/* Administrative / Portals */}
           <div>
-            <h5 className="text-white text-xs font-bold uppercase tracking-wider mb-4">
+            <h5 className="text-white text-lg font-bold uppercase tracking-wider mb-4">
               {language === 'bn' ? 'প্রশাসনিক ও সেবা' : 'Administration & System'}
             </h5>
             <ul className="space-y-2.5 text-xs">
@@ -150,7 +150,7 @@ export const Footer: React.FC = () => {
                     setActivePage('committee');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className="hover:text-emerald-400 transition flex items-center gap-1.5 text-slate-300 font-medium"
+                  className="hover:text-emerald-400 text-[15px] transition flex items-center gap-1.5 text-slate-300 font-medium"
                 >
                   <Users className="w-3.5 h-3.5 text-emerald-400" />
                   <span>{language === 'bn' ? 'কার্যকরী সংসদ' : 'Executive Committee'}</span>
@@ -162,7 +162,7 @@ export const Footer: React.FC = () => {
                     setActivePage('notices');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className="hover:text-emerald-400 transition flex items-center gap-1.5 text-slate-300"
+                  className="hover:text-emerald-400 text-[15px] transition flex items-center gap-1.5 text-slate-300"
                 >
                   <FileText className="w-3.5 h-3.5 text-sky-400" />
                   <span>{t.nav.notices}</span>
@@ -185,7 +185,7 @@ export const Footer: React.FC = () => {
 
           {/* Transparency & Financial Integrity */}
           <div>
-            <h5 className="text-white text-xs font-bold uppercase tracking-wider mb-4">
+            <h5 className="text-white text-lg font-bold uppercase tracking-wider mb-4">
               {language === 'bn' ? 'স্বচ্ছতা ও দায়বদ্ধতা' : 'Trust & Governance'}
             </h5>
             <div className="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 text-xs space-y-2">
@@ -193,7 +193,7 @@ export const Footer: React.FC = () => {
                 <ShieldCheck className="w-4 h-4" />
                 <span>100% Audited Giving</span>
               </div>
-              <p className="text-[11px] text-slate-400 leading-relaxed">
+              <p className="text-[13px] text-slate-400 leading-relaxed">
                 {language === 'bn'
                   ? 'সকল অনুদানের বিবরণ ডিজিটাল রসিদের মাধ্যমে নিশ্চিত করা হয়। সংগঠনের নিজস্ব কোনো বাণিজ্যিক লক্ষ্য নেই।'
                   : 'Every taka received is verified through digital transaction verification and matched to verifiable field distributions.'}
@@ -203,7 +203,7 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-6 border-t border-slate-850 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="mt-12 pt-6 mb-0 border-t border-slate-850 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div>
             © {new Date().getFullYear()} JAGREETI (জাগৃতি) Foundation. All Rights Reserved.
           </div>
@@ -216,7 +216,7 @@ export const Footer: React.FC = () => {
           </div>
           <div className="flex items-center gap-4">
             <span className="text-[11px] text-slate-400">
-              {language === 'bn' ? 'স্বেচ্ছাসেবা • সততা • মানবিক দায়িত্ব' : 'Volunteering • Transparency • Humanity'}
+              {language === 'bn' ? 'সামাজিক, সাংস্কৃতিক ও ক্রীড়া প্রতিষ্ঠান' : 'Social, Cultural & Sports Organization'}
             </span>
           </div>
         </div>

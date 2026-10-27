@@ -112,7 +112,7 @@ export const Navbar: React.FC = () => {
                 </span>
               </div>
               <p className="text-[10px] sm:text-[11px] text-slate-500 hidden xs:block font-medium">
-                {language === 'bn' ? 'তারুণ্য • মানবতা • সেবা' : 'Youth • Humanity • Service'}
+                {language === 'bn' ? 'সামাজিক, সাংস্কৃতিক ও ক্রীড়া প্রতিষ্ঠান' : 'Social, Cultural & Sports Organization'}
               </p>
             </div>
           </div>
@@ -126,7 +126,7 @@ export const Navbar: React.FC = () => {
                 <button
                   key={item.id}
                   onClick={() => handleNavClick(item.id)}
-                  className={`relative px-2.5 py-2 rounded-xl text-xs font-semibold transition-all duration-150 flex items-center gap-1.5 ${
+                  className={`relative px-2.5 py-2 cursor-pointer rounded-xl text-md font-semibold transition-all duration-150 flex items-center gap-1.5 ${
                     isActive
                       ? 'text-white shadow-sm'
                       : 'text-slate-700 hover:text-[#04345c] hover:bg-slate-100'

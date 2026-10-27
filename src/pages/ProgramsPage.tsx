@@ -30,7 +30,7 @@ export const ProgramsPage: React.FC = () => {
       {/* Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl space-y-4">
         <div
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider"
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-md font-semibold uppercase tracking-wider"
           style={{
             backgroundColor: `${currentPalette.primary}15`,
             color: currentPalette.primary,
@@ -55,7 +55,7 @@ export const ProgramsPage: React.FC = () => {
           <div className="flex items-center justify-center gap-2 flex-wrap pt-2">
             <button
               onClick={() => setSelectedCategory('all')}
-              className={`px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+              className={`px-4 py-1.5 rounded-xl text-sm font-bold transition cursor-pointer ${
                 selectedCategory === 'all'
                   ? 'bg-[#04345c] text-white shadow-xs'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -67,7 +67,7 @@ export const ProgramsPage: React.FC = () => {
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-xl text-sm font-semibold transition cursor-pointer ${
                   selectedCategory.toLowerCase() === cat.toLowerCase()
                     ? 'bg-[#10564f] text-white shadow-xs'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -81,7 +81,7 @@ export const ProgramsPage: React.FC = () => {
       </div>
 
       {/* Programs List (Sorted by Priority) */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <div className="max-w-7xl mx-auto md:px-4 sm:px-6 lg:px-8 space-y-12">
         {filteredPrograms.map((prog, index) => {
           const isEven = index % 2 === 0;
           return (
@@ -112,7 +112,7 @@ export const ProgramsPage: React.FC = () => {
                     </span>
                   )}
                 </div>
-                <div className="absolute bottom-4 left-4 px-3.5 py-1.5 rounded-xl bg-white/95 backdrop-blur-md text-xs font-extrabold text-slate-900 shadow-lg">
+                <div className="absolute bottom-4 left-4 px-3.5 py-1.5 rounded-xl bg-white/95 backdrop-blur-md text-sm font-extrabold text-slate-900 shadow-lg">
                   {language === 'bn' ? prog.impactBn || prog.impact : prog.impact}
                 </div>
               </div>
@@ -123,11 +123,11 @@ export const ProgramsPage: React.FC = () => {
                 }`}
               >
                 <div className="space-y-4">
-                  <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+                  <h2 className="md:text-2xl sm:text-3xl font-extrabold text-slate-900">
                     {language === 'bn' ? prog.titleBn : prog.title}
                   </h2>
 
-                  <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+                  <p className="text-slate-600 md:text-sm sm:text-base leading-relaxed">
                     {language === 'bn' ? prog.descBn : prog.desc}
                   </p>
 
@@ -135,7 +135,7 @@ export const ProgramsPage: React.FC = () => {
                     {(language === 'bn' ? prog.highlightsBn : prog.highlights)?.map((item, i) => (
                       <div
                         key={i}
-                        className="flex items-center gap-2.5 text-xs sm:text-sm font-medium text-slate-700"
+                        className="flex items-center gap-2.5 md:text-sm sm:text-sm font-medium text-slate-700"
                       >
                         <CheckCircle2
                           className="w-4 h-4 shrink-0"
@@ -151,7 +151,7 @@ export const ProgramsPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setActivePage('donate')}
-                    className="px-5 py-2.5 rounded-xl text-white text-xs sm:text-sm font-bold shadow-md hover:opacity-95 transition flex items-center gap-2 cursor-pointer"
+                    className="px-5 py-2.5 rounded-xl text-white md:text-md sm:text-sm font-bold shadow-md hover:opacity-95 transition flex items-center gap-2 cursor-pointer"
                     style={{ backgroundColor: currentPalette.primary }}
                   >
                     <span>
@@ -164,7 +164,7 @@ export const ProgramsPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setActivePage('volunteer')}
-                    className="px-5 py-2.5 rounded-xl bg-slate-100 text-slate-700 text-xs sm:text-sm font-semibold hover:bg-slate-200 transition cursor-pointer"
+                    className="px-5 py-2.5 rounded-xl bg-slate-100 text-slate-700 text-sm sm:text-sm font-semibold hover:bg-slate-200 transition cursor-pointer"
                   >
                     {language === 'bn' ? 'স্বেচ্ছাসেবক হিসেবে যুক্ত হোন' : 'Join as Volunteer'}
                   </button>
