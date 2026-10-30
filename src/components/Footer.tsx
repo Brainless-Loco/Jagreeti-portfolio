@@ -8,6 +8,7 @@ import {
   ChevronRight,
   Users,
   FileText,
+  Bookmark 
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
@@ -138,7 +139,7 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Administrative / Portals */}
+          {/* Administrative / Portals / Miscellaneous */}
           <div>
             <h5 className="text-white text-lg font-bold uppercase tracking-wider mb-4">
               {language === 'bn' ? 'প্রশাসনিক ও সেবা' : 'Administration & System'}
@@ -180,6 +181,26 @@ export const Footer: React.FC = () => {
                   <span>{t.nav.admin}</span>
                 </button>
               </li> */}
+            </ul>
+            
+            <h5 className="text-white text-lg font-bold uppercase tracking-wider mt-5 mb-3">
+              {language === 'bn' ? 'বিবিধ' : 'Miscellaneous'}
+            </h5>
+            <ul className="space-y-2.5 text-xs">
+              <li>
+                <button
+                  onClick={() => {
+                    setActivePage('magazine');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="hover:text-emerald-400 text-[15px] transition flex items-center gap-1.5 text-slate-300 font-medium"
+                >
+                  {/* magazine or book related icon */}
+
+                  <Bookmark className="w-3.5 h-3.5 text-sky-400" />
+                  <span>{language === 'bn' ? 'জাগৃতি ম্যাগাজিন' : 'JAGREETI Magazine'}</span>
+                </button>
+              </li>
             </ul>
           </div>
 

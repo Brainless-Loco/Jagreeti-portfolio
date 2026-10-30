@@ -21,6 +21,7 @@ import { DonationPage } from './pages/DonationPage';
 import { ContactPage } from './pages/ContactPage';
 import { ConstitutionPage } from './pages/ConstitutionPage';
 import { AdminPanelPage } from './pages/AdminPanelPage';
+import { MagazinePage } from './pages/MagazinePage';
 
 const MainContent: React.FC = () => {
   const { activePage, language } = useApp();
@@ -58,6 +59,8 @@ const MainContent: React.FC = () => {
         return <ConstitutionPage />;
       case 'admin':
         return <AdminPanelPage />;
+      case 'magazine':
+        return <MagazinePage />;
       default:
         return <HomePage />;
     }

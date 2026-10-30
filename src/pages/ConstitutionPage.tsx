@@ -3,7 +3,7 @@ import { ExternalLink, FileText } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 // Add the constitution PDF URL here.
-const CONSTITUTION_PDF_URL = '';
+const CONSTITUTION_PDF_URL = 'https://firebasestorage.googleapis.com/v0/b/jagreeti-portfolio.firebasestorage.app/o/jagreeti_media%2Fextra%2Fconstitution.pdf?alt=media&token=878821a4-b877-4e53-aa0d-f6739e6d3089';
 
 export const ConstitutionPage: React.FC = () => {
   const { language, currentPalette } = useApp();
@@ -38,7 +38,7 @@ export const ConstitutionPage: React.FC = () => {
             <iframe
               src={CONSTITUTION_PDF_URL}
               title={isBangla ? 'জাগৃতির সংবিধান' : 'JAGREETI Constitution'}
-              className="w-full h-[min(75vh,820px)] bg-white"
+              className="w-full h-[min(95vh,820px)] bg-white"
             />
           ) : (
             <div className="flex min-h-96 items-center justify-center p-8 text-center text-slate-500">
